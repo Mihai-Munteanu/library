@@ -9,7 +9,9 @@ Dir[Rails.root.join("db/seeds/*.rb")].sort.each { |file| require file }
 # Set clear_existing: true if you want to delete all existing authors first
 Seeds::Authors.seed(count: 100, clear_existing: false)
 
+# Seed books
+Seeds::Books.seed(count: 100, clear_existing: false)
+
 # Add more seeders here as you create them:
-# Seeds::Books.seed(count: 50)
 # Seeds::Members.seed(count: 20)
 # Seeds::Loans.seed(count: 15)

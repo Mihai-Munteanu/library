@@ -1,0 +1,89 @@
+<%= form_with(model: book, local:true) do |form| %>
+  <% if book.errors.any? %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <h2 class="font-bold"><%= pluralize(book.errors.count, "error") %> prohibited this book from being saved:</h2>
+      <ul class="list-disc list-inside">
+        <% book.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :title, class: "block text-gray-700 font-bold mb-2" do %>
+      Title <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.text_field :title,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:title].any?}" %>
+    <% if book.errors[:title].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:title].first %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :isbn, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :isbn,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:isbn].any?}" %>
+    <% if book.errors[:isbn].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:isbn].first %></p>
+    <% end %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :description, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_area :description, rows: 5,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:description].any?}" %>
+    <% if book.errors[:description].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:description].first %></p>
+    <% end %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :author_id, class: "block text-gray-700 font-bold mb-2" do %>
+      Author <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.select :author_id,
+        Author.all.map { |a| [a.name, a.id] },
+        { prompt: "Select author", selected: book.author_id },
+        { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:author_id].any?}" } %>
+    <% if book.errors[:author_id].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:author_id].first %></p>
+    <% end %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :publication_date, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.date_field :publication_date,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:publication_date].any?}" %>
+    <% if book.errors[:publication_date].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:publication_date].first %></p>
+    <% end %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :copies_sold, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.number_field :copies_sold,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:copies_sold].any?}" %>
+    <% if book.errors[:copies_sold].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:copies_sold].first %></p>
+    <% end %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :price, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.number_field :price, step: 0.01,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:price].any?}" %>
+    <% if book.errors[:price].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:price].first %></p>
+    <% end %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :pages, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.number_field :pages,
+        class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline #{'border-red-500' if book.errors[:pages].any?}" %>
+    <% if book.errors[:pages].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= book.errors[:pages].first %></p>
+    <% end %>
+  </div>
+  <div class="flex items-center justify-between">
+    <%= form.submit class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+    <%= link_to "Cancel", books_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+<% end %>
+

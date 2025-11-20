@@ -1,0 +1,53 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold"><%= @book.title %></h1>
+    <div>
+      <%= link_to "Edit", edit_book_path(@book), class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" %>
+      <%= link_to "Back to Books", books_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <dl class="grid grid-cols-2 gap-4">
+      <div>
+        <dt class="font-bold text-gray-700">Title:</dt>
+        <dd class="text-gray-900"><%= @book.title %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">ISBN:</dt>
+        <dd class="text-gray-900"><%= @book.isbn || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Description:</dt>
+        <dd class="text-gray-900"><%= @book.description || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Publication Date:</dt>
+        <dd class="text-gray-900"><%= @book.publication_date || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Copies Sold:</dt>
+        <dd class="text-gray-900"><%= @book.copies_sold || "N/A" %></dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Price:</dt>
+        <dd class="text-gray-900"><%= @book.price || "N/A" %></dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Pages:</dt>
+        <dd class="text-gray-900"><%= @book.pages || "N/A" %></dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Author:</dt>
+        <dd class="text-gray-900"><%= link_to @book.author.name || "N/A", author_path(@book.author) %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

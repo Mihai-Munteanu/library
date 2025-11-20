@@ -1,4 +1,5 @@
 class Author < ApplicationRecord
+  has_many :books, dependent: :destroy
   enum :gender, {
     male: "male",
     female: "female",
