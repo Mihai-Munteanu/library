@@ -1,0 +1,78 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold"><%= @member.name %></h1>
+    <div>
+      <%= link_to "Edit", edit_member_path(@member), class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" %>
+      <%= link_to "Back to Members", members_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <dl class="grid grid-cols-2 gap-4">
+      <div>
+        <dt class="font-bold text-gray-700">Name:</dt>
+        <dd class="text-gray-900"><%= @member.name %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Email:</dt>
+        <dd class="text-gray-900"><%= @member.email %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Birth Date:</dt>
+        <dd class="text-gray-900"><%= @member.birth_date %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Gender:</dt>
+        <dd class="text-gray-900"><%= @member.gender&.humanize || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Is Active:</dt>
+        <dd class="text-gray-900"><%= @member.is_active ? "Yes" : "No" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Is VIP:</dt>
+        <dd class="text-gray-900"><%= @member.is_vip ? "Yes" : "No" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Is Admin:</dt>
+        <dd class="text-gray-900"><%= @member.is_admin ? "Yes" : "No" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Balance:</dt>
+        <dd class="text-gray-900"><%= @member.balance %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Total Spent:</dt>
+        <dd class="text-gray-900"><%= @member.total_spent %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Discount Rate:</dt>
+        <dd class="text-gray-900"><%= @member.discount_rate %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Points:</dt>
+        <dd class="text-gray-900"><%= @member.points %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Books Borrowed:</dt>
+        <dd class="text-gray-900"><%= @member.books_borrowed %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Books Returned:</dt>
+        <dd class="text-gray-900"><%= @member.books_returned %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

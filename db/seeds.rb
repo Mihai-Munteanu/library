@@ -12,6 +12,8 @@ Seeds::Authors.seed(count: 100, clear_existing: false)
 # Seed books
 Seeds::Books.seed(count: 100, clear_existing: false)
 
+# Seed members
+Seeds::Members.seed(count: 100, clear_existing: false)
+
 # Add more seeders here as you create them:
-# Seeds::Members.seed(count: 20)
 # Seeds::Loans.seed(count: 15)

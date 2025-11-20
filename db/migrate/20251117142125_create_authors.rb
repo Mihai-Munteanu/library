@@ -6,7 +6,7 @@ class CreateAuthors < ActiveRecord::Migration[8.1]
       t.date :birth_date
       t.date :death_date
       t.string :nationality
-      t.string :gender, default: "male"
+      t.string :gender
       t.json :awards
       t.json :publications
       t.json :achievements

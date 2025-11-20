@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_20_040548) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_20_052147) do
   create_table "authors", force: :cascade do |t|
     t.json "achievements"
     t.json "awards"
@@ -42,6 +42,24 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_20_040548) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_books_on_author_id"
+  end
+
+  create_table "members", force: :cascade do |t|
+    t.decimal "balance", precision: 10, scale: 2, default: "0.0"
+    t.date "birth_date"
+    t.bigint "books_borrowed", default: 0
+    t.bigint "books_returned", default: 0
+    t.datetime "created_at", null: false
+    t.float "discount_rate", default: 0.0
+    t.string "email"
+    t.string "gender"
+    t.boolean "is_active", default: true
+    t.boolean "is_admin", default: false
+    t.boolean "is_vip", default: false
+    t.string "name"
+    t.float "points", default: 0.0
+    t.decimal "total_spent", precision: 10, scale: 2, default: "0.0"
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "books", "authors"
