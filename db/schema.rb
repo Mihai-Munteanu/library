@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_20_052147) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_20_212505) do
   create_table "authors", force: :cascade do |t|
     t.json "achievements"
     t.json "awards"
@@ -44,6 +44,27 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_20_052147) do
     t.index ["author_id"], name: "index_books_on_author_id"
   end
 
+  create_table "loans", force: :cascade do |t|
+    t.integer "book_id"
+    t.datetime "created_at", null: false
+    t.datetime "due_date"
+    t.integer "member_id"
+    t.json "metadata", default: {}
+    t.text "notes"
+    t.time "paused_end_time", default: "2000-01-01 00:13:00"
+    t.time "paused_start_time", default: "2000-01-01 00:12:00"
+    t.datetime "return_date"
+    t.datetime "start_date"
+    t.integer "status", default: 0
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_loans_on_book_id"
+    t.index ["due_date"], name: "index_loans_on_due_date"
+    t.index ["member_id"], name: "index_loans_on_member_id"
+    t.index ["return_date"], name: "index_loans_on_return_date"
+    t.index ["start_date"], name: "index_loans_on_start_date"
+    t.index ["status"], name: "index_loans_on_status"
+  end
+
   create_table "members", force: :cascade do |t|
     t.decimal "balance", precision: 10, scale: 2, default: "0.0"
     t.date "birth_date"
@@ -63,4 +84,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_20_052147) do
   end
 
   add_foreign_key "books", "authors"
+  add_foreign_key "loans", "books"
+  add_foreign_key "loans", "members"
 end

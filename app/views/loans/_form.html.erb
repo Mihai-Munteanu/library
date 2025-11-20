@@ -1,0 +1,60 @@
+<%= form_with(model: loan, class: "contents") do |form| %>
+  <% if loan.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(loan.errors.count, "error") %> prohibited this loan from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% loan.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<div class="my-5">
+    <%= form.label :member %>
+    <%= form.select :member_id, Member.all.map { |m| [m.name, m.id] }, { prompt: "Select member" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:member_id].none?, "border-red-400 focus:outline-red-600": loan.errors[:member_id].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :book %>
+    <%= form.select :book_id, Book.all.map { |b| [b.title, b.id] }, { prompt: "Select book" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:book_id].none?, "border-red-400 focus:outline-red-600": loan.errors[:book_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :start_date %>
+    <%= form.datetime_field :start_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:start_date].none?, "border-red-400 focus:outline-red-600": loan.errors[:start_date].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :due_date %>
+    <%= form.datetime_field :due_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:due_date].none?, "border-red-400 focus:outline-red-600": loan.errors[:due_date].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :return_date %>
+    <%= form.datetime_field :return_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:return_date].none?, "border-red-400 focus:outline-red-600": loan.errors[:return_date].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.select :status, Loan.statuses.keys, { prompt: "Select status" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:status].none?, "border-red-400 focus:outline-red-600": loan.errors[:status].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 5, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:notes].none?, "border-red-400 focus:outline-red-600": loan.errors[:notes].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :metadata %>
+    <%= form.text_area :metadata, rows: 5, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:metadata].none?, "border-red-400 focus:outline-red-600": loan.errors[:metadata].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :paused_start_time %>
+    <%= form.time_field :paused_start_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:paused_start_time].none?, "border-red-400 focus:outline-red-600": loan.errors[:paused_start_time].any?}] %>
+  </div>
+  <div class="my-5">
+    <%= form.label :paused_end_time %>
+    <%= form.time_field :paused_end_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:paused_end_time].none?, "border-red-400 focus:outline-red-600": loan.errors[:paused_end_time].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
