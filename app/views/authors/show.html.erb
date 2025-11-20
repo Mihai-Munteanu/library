@@ -1,0 +1,76 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold"><%= @author.name %></h1>
+    <div>
+      <%= link_to "Edit", edit_author_path(@author), class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" %>
+      <%= link_to "Back to Authors", authors_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <dl class="grid grid-cols-2 gap-4">
+      <div>
+        <dt class="font-bold text-gray-700">Name:</dt>
+        <dd class="text-gray-900"><%= @author.name %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Nationality:</dt>
+        <dd class="text-gray-900"><%= @author.nationality || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Gender:</dt>
+        <dd class="text-gray-900"><%= @author.gender&.humanize || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Birth Date:</dt>
+        <dd class="text-gray-900"><%= @author.birth_date || "N/A" %></dd>
+      </div>
+
+      <div>
+        <dt class="font-bold text-gray-700">Death Date:</dt>
+        <dd class="text-gray-900"><%= @author.death_date || "N/A" %></dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Biography:</dt>
+        <dd class="text-gray-900"><%= @author.biography.present? ? @author.biography : "No biography available." %></dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Awards:</dt>
+        <dd class="text-gray-900">
+          <% if @author.awards.present? %>
+            <pre class="bg-gray-100 p-2 rounded text-sm overflow-x-auto"><%= JSON.pretty_generate(@author.awards) %></pre>
+          <% else %>
+            No awards recorded.
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Publications:</dt>
+        <dd class="text-gray-900">
+          <% if @author.publications.present? %>
+            <pre class="bg-gray-100 p-2 rounded text-sm overflow-x-auto"><%= JSON.pretty_generate(@author.publications) %></pre>
+          <% else %>
+            No publications recorded.
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Achievements:</dt>
+        <dd class="text-gray-900">
+          <% if @author.achievements.present? %>
+            <pre class="bg-gray-100 p-2 rounded text-sm overflow-x-auto"><%= JSON.pretty_generate(@author.achievements) %></pre>
+          <% else %>
+            No achievements recorded.
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

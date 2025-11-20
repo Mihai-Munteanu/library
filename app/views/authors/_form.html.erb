@@ -1,0 +1,61 @@
+<%= form_with(model: author, local: true) do |form| %>
+  <% if author.errors.any? %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <h2 class="font-bold"><%= pluralize(author.errors.count, "error") %> prohibited this author from being saved:</h2>
+      <ul class="list-disc list-inside">
+        <% author.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :name, class: "block text-gray-700 font-bold mb-2"  do %>
+      Name <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :biography, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_area :biography, rows: 5, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :birth_date, class: "block text-gray-700 font-bold mb-2"  do %>
+      Birth Date <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.date_field :birth_date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :death_date, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.date_field :death_date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :nationality, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.text_field :nationality, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :gender, class: "block text-gray-700 font-bold mb-2" do %>
+      Gender <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.select :gender,
+        Author.genders.keys.map { |g| [g.humanize, g] },
+        { prompt: "Select gender" },
+        { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :number_of_books, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.number_field :number_of_books, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="flex items-center justify-between">
+    <%= form.submit class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+    <%= link_to "Cancel", authors_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+<% end %>
