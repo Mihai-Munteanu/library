@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
+  get "dashboard/index"
   resources :loans
   resources :members
   resources :authors
   resources :books
 
-  root "authors#index"
+  root "dashboard#index"
 end
