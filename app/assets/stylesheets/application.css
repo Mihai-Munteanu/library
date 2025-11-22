@@ -8,3 +8,11 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* ============================================
+   Application-wide CSS
+   Add your custom styles here
+   ============================================ */
+
+/* Import Pagy CSS */
+@import "pagy.css";

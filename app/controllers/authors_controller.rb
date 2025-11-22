@@ -2,7 +2,8 @@ class AuthorsController < ApplicationController
   before_action :set_author, only: [:show, :edit, :update, :destroy]
 
   def index
-    @authors = Author.all
+    @authors = Author.order(created_at: :desc)
+    @pagy, @authors = pagy(:offset, @authors)
   end
 
   def show

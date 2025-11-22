@@ -56,6 +56,11 @@
           <% end %>
         </tbody>
       </table>
+      <div class="mt-6">
+        <tr>
+          <td colspan="4"><%== @pagy.series_nav %></td>
+        </tr>
+      </div>
     <% else %>
       <p class="text-gray-500">No members yet. <%= link_to "Create one", new_member_path, class: "text-blue-500 hover:underline" %>!</p>
     <% end %>

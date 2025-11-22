@@ -3,7 +3,8 @@ class MembersController < ApplicationController
 
   # GET /members or /members.json
   def index
-    @members = Member.all
+    @members = Member.order(created_at: :desc)
+    @pagy, @members = pagy(:offset, @members)
   end
 
   # GET /members/1 or /members/1.json
