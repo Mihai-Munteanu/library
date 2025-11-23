@@ -1,6 +1,6 @@
 module Seeds
   class Loans
-    def self.seed(count: 100, clear_existing: false)
+    def self.seed(count: 5000, clear_existing: false)
       if clear_existing
         puts "Clearing existing loans..."
         Loan.destroy_all
@@ -11,9 +11,16 @@ module Seeds
       count.times do |i|
         member = Member.all.sample
         book = Book.all.sample
-        start_date = Faker::Date.between(from: 1.year.ago, to: Date.today)
-        due_date = Faker::Date.between(from: start_date, to: 1.year.from_now)
+
+        # Skip if no members or books exist
+        next unless member && book
+
+        # start_date must be less than Date.today (not equal), so use Date.yesterday as max
+        start_date = Faker::Date.between(from: 1.year.ago, to: Date.yesterday)
+        # due_date must be greater than start_date (not equal), so start from start_date + 1 day
+        due_date = Faker::Date.between(from: start_date + 1.day, to: 1.year.from_now)
         return_date = if rand < 0.7  # 70% chance of being returned
+          # return_date must be greater than start_date, so ensure it's at least due_date
           Faker::Date.between(from: due_date, to: 1.year.from_now)
         else
           nil
@@ -30,7 +37,7 @@ module Seeds
         if rand < 0.3  # 30% chance of having paused times
           start_hour = rand(8..16)
           paused_start_time = Time.parse("#{start_hour}:00:00")
-          paused_end_time = Time.parse("#{[start_hour + rand(1..4), 23].min}:00:00")
+          paused_end_time = Time.parse("#{[ start_hour + rand(1..4), 23 ].min}:00:00")
         end
 
         # Build loan attributes hash

@@ -3,7 +3,7 @@
 
 module Seeds
   class Books
-    def self.seed(count: 100, clear_existing: false)
+    def self.seed(count: 5000, clear_existing: false)
       # Clear existing books if requested
       if clear_existing
         puts "Clearing existing books..."

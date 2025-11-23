@@ -73,6 +73,20 @@
         <dt class="font-bold text-gray-700">Books Returned:</dt>
         <dd class="text-gray-900"><%= @member.books_returned %></dd>
       </div>
+      <div>
+        <dt class="font-bold text-gray-700">Loans:</dt>
+        <dd class="text-gray-900">
+          <% if @member.loans.present? %>
+            <ul>
+              <% @member.loans.each do |loan| %>
+                <li><%= link_to loan.book.title, book_path(loan.book), class: "text-blue-500 hover:underline" %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            No loans recorded.
+          <% end %>
+        </dd>
+      </div>
     </dl>
   </div>
 </div>

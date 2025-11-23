@@ -58,6 +58,14 @@
         <dt class="font-bold text-gray-700">Paused End Time:</dt>
         <dd class="text-gray-900"><%= @loan.paused_end_time %></dd>
       </div>
+      <div>
+        <dt class="font-bold text-gray-700">Member:</dt>
+        <dd class="text-gray-900"><%= link_to @loan.member.name, member_path(@loan.member), class: "text-blue-500 hover:underline" %></dd>
+      </div>
+      <div>
+        <dt class="font-bold text-gray-700">Book:</dt>
+        <dd class="text-gray-900"><%= link_to @loan.book.title, book_path(@loan.book), class: "text-blue-500 hover:underline" %></dd>
+      </div>
     </dl>
   </div>
 </div>

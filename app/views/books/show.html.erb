@@ -48,6 +48,20 @@
         <dt class="font-bold text-gray-700">Author:</dt>
         <dd class="text-gray-900"><%= link_to @book.author.name || "N/A", author_path(@book.author) %></dd>
       </div>
+      <div class="col-span-2">
+        <dt class="font-bold text-gray-700">Loans:</dt>
+        <dd class="text-gray-900">
+          <% if @book.loans.present? %>
+            <ul>
+              <% @book.loans.each do |loan| %>
+                <li><%= link_to loan.member.name, loan_path(loan), class: "text-blue-500 hover:underline" %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            No loans recorded.
+          <% end %>
+        </dd>
+        </div>
     </dl>
   </div>
 </div>

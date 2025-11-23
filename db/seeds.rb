@@ -10,10 +10,10 @@ Dir[Rails.root.join("db/seeds/*.rb")].sort.each { |file| require file }
 Seeds::Authors.seed(count: 100, clear_existing: false)
 
 # Seed books
-Seeds::Books.seed(count: 100, clear_existing: false)
+Seeds::Books.seed(count: 5000, clear_existing: false)
 
 # Seed members
 Seeds::Members.seed(count: 100, clear_existing: false)
 
 # Seed loans
-Seeds::Loans.seed(count: 100, clear_existing: false)
+Seeds::Loans.seed(count: 5000, clear_existing: false)

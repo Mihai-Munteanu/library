@@ -9,6 +9,9 @@ class BooksController < ApplicationController
   end
 
   def show
+    @book = Book.includes(:author, :loans).find(params[:id])
+    @loans = @book.loans
+    @pagy, @loans = pagy(:offset, @loans, items: 10)
   end
 
   def new
