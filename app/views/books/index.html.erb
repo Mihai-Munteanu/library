@@ -16,50 +16,7 @@
       filter_fields: { title: "text", isbn: "text", author_id: "select" },
       options: { author_id: Author.all.map { |a| [a.name, a.id] } } %>
 
-  <% if @books.any? %>
-    <table class="min-w-full bg-white border border-gray-300">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:title, "Title") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:isbn, "ISBN") %></th>
-          <th class="px-4 py-2 border-b">Description</th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:publication_date, "Publication Date") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:copies_sold, "Copies Sold") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:price, "Price") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:pages, "Pages") %></th>
-          <th class="px-4 py-2 border-b">Author</th>
-          <th class="px-4 py-2 border-b">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @books.each do |book| %>
-          <tr id="book_<%= book.id %>">
-            <td class="px-4 py-2 border-b"><%= book.title %></td>
-            <td class="px-4 py-2 border-b"><%= book.isbn %></td>
-            <td class="px-4 py-2 border-b"><%= book.description %></td>
-            <td class="px-4 py-2 border-b"><%= book.publication_date %></td>
-            <td class="px-4 py-2 border-b"><%= book.copies_sold %></td>
-            <td class="px-4 py-2 border-b"><%= book.price %></td>
-            <td class="px-4 py-2 border-b"><%= book.pages %></td>
-            <td class="px-4 py-2 border-b"><%= link_to book.author.name, author_path(book.author) %></td>
-            <td class="px-4 py-2 border-b">
-              <%= link_to "Show", book, class: "text-blue-500 hover:underline mr-2" %>
-              <%= link_to "Edit", edit_book_path(book), class: "text-green-500 hover:underline mr-2" %>
-              <%= link_to "Delete", book_path(book),
-                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                  class: "text-red-500 hover:underline" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <% if @pagy && @pagy.pages > 1 %>
-      <div class="mt-6 flex justify-center">
-        <%== @pagy.series_nav %>
-      </div>
-    <% end %>
-  <% else %>
-    <p class="text-gray-500">No books yet. <%= link_to "Create one", new_book_path, class: "text-blue-500 hover:underline" %>!</p>
-  <% end %>
+  <%= render "books/table",
+      show_author: true,
+      empty_message: "No books yet. #{link_to 'Create one', new_book_path, class: 'text-blue-500 hover:underline'}!".html_safe %>
 </div>

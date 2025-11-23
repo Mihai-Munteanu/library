@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "books_table" do %>
+  <%= render "books/table",
+      title: "Books by #{@author.name}",
+      show_author: false,
+      empty_message: "No books recorded for this author." %>
+<% end %>
+

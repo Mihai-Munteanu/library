@@ -11,7 +11,14 @@ class AuthorsController < ApplicationController
   def show
     @author = Author.includes(:books).find(params[:id])
     @books = @author.books
+    @books = apply_sorting(@books, { created_at: :desc })
     @pagy, @books = pagy(:offset, @books, items: 10)
+
+    # If this is a Turbo Frame request (pagination), render only the frame partial
+    if request.headers["Turbo-Frame"] == "books_table"
+      render partial: "authors/books_table_frame", layout: false
+      nil
+    end
   end
 
   def new
