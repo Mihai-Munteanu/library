@@ -68,9 +68,7 @@ class AuthorsController < ApplicationController
       :death_date,
       :nationality,
       :gender,
-      :awards,
-      :publications,
-      :achievements
+      metadata: [ :website, :email, :twitter, :facebook, :tags, :notes ]
     )
   end
 end

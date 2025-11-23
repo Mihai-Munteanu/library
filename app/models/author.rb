@@ -6,6 +6,7 @@ class Author < ApplicationRecord
     prefer_not_to_say: 3
   }
 
+  after_initialize :initialize_metadata
 
   validates :name, presence: true
   validates :name, length: { minimum: 3 }, allow_blank: true
@@ -19,4 +20,10 @@ class Author < ApplicationRecord
   validates :nationality, length: { minimum: 3 }, allow_blank: true
 
   validates :gender, presence: true
+
+  private
+
+  def initialize_metadata
+    self.metadata ||= {}
+  end
 end

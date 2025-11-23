@@ -54,6 +54,42 @@
     <%= form.number_field :number_of_books, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
   </div>
 
+  <div class="mb-6 border-t pt-4">
+    <h3 class="text-lg font-bold text-gray-700 mb-4">Metadata</h3>
+
+    <% metadata = author.metadata || {} %>
+
+    <div class="mb-4">
+      <%= form.label :metadata_website, "Website", class: "block text-gray-700 font-bold mb-2" %>
+      <%= text_field_tag "author[metadata][website]", metadata["website"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :metadata_email, "Email", class: "block text-gray-700 font-bold mb-2" %>
+      <%= email_field_tag "author[metadata][email]", metadata["email"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :metadata_twitter, "Twitter", class: "block text-gray-700 font-bold mb-2" %>
+      <%= text_field_tag "author[metadata][twitter]", metadata["twitter"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :metadata_facebook, "Facebook", class: "block text-gray-700 font-bold mb-2" %>
+      <%= text_field_tag "author[metadata][facebook]", metadata["facebook"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :metadata_tags, "Tags", class: "block text-gray-700 font-bold mb-2" %>
+      <%= text_field_tag "author[metadata][tags]", metadata["tags"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :metadata_notes, "Notes", class: "block text-gray-700 font-bold mb-2" %>
+      <%= text_area_tag "author[metadata][notes]", metadata["notes"], rows: 3, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+    </div>
+  </div>
+
   <div class="flex items-center justify-between">
     <%= form.submit class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
     <%= link_to "Cancel", authors_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>

@@ -47,6 +47,72 @@
     </dl>
   </div>
 
+  <!-- Metadata Section -->
+  <% metadata = @author.metadata || {} %>
+  <% if metadata.values.any?(&:present?) %>
+    <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 lg:px-8 pt-6 pb-8 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Additional Information</h2>
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <% if metadata["website"].present? %>
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Website</dt>
+            <dd class="text-base text-gray-900">
+              <%= link_to metadata["website"], metadata["website"], target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if metadata["email"].present? %>
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Email</dt>
+            <dd class="text-base text-gray-900">
+              <%= mail_to metadata["email"], metadata["email"], class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if metadata["twitter"].present? %>
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Twitter</dt>
+            <dd class="text-base text-gray-900">
+              <%= link_to metadata["twitter"], "https://twitter.com/#{metadata["twitter"].gsub(/^@/, '')}", target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if metadata["facebook"].present? %>
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Facebook</dt>
+            <dd class="text-base text-gray-900">
+              <%= link_to metadata["facebook"], metadata["facebook"], target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if metadata["tags"].present? %>
+          <div class="sm:col-span-1">
+            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Tags</dt>
+            <dd class="text-base text-gray-900">
+              <% tags = metadata["tags"].is_a?(Array) ? metadata["tags"] : metadata["tags"].to_s.split(",").map(&:strip) %>
+              <% tags.each do |tag| %>
+                <span class="inline-block bg-gray-200 text-gray-800 text-sm px-2 py-1 rounded mr-2 mb-2"><%= tag.to_s.strip %></span>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if metadata["notes"].present? %>
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Notes</dt>
+            <dd class="text-base text-gray-900 leading-relaxed">
+              <%= simple_format(metadata["notes"]) %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  <% end %>
+
   <!-- Books Section - Responsive Header -->
   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
     <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Books by <%= @author.name %></h2>
