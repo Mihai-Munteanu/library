@@ -12,46 +12,83 @@
 <% end %>
 
 <% if books.any? %>
-  <table class="min-w-full bg-white border border-gray-300">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-4 py-2 border-b"><%= sortable_column(:title, "Title") %></th>
-        <th class="px-4 py-2 border-b"><%= sortable_column(:isbn, "ISBN") %></th>
-        <th class="px-4 py-2 border-b">Description</th>
-        <th class="px-4 py-2 border-b"><%= sortable_column(:publication_date, "Publication Date") %></th>
-        <th class="px-4 py-2 border-b"><%= sortable_column(:copies_sold, "Copies Sold") %></th>
-        <th class="px-4 py-2 border-b"><%= sortable_column(:price, "Price") %></th>
-        <th class="px-4 py-2 border-b"><%= sortable_column(:pages, "Pages") %></th>
-        <% if show_author %>
-          <th class="px-4 py-2 border-b">Author</th>
-        <% end %>
-        <th class="px-4 py-2 border-b">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% books.each do |book| %>
-        <tr id="book_<%= book.id %>">
-          <td class="px-4 py-2 border-b"><%= book.title %></td>
-          <td class="px-4 py-2 border-b"><%= book.isbn %></td>
-          <td class="px-4 py-2 border-b"><%= book.description %></td>
-          <td class="px-4 py-2 border-b"><%= book.publication_date %></td>
-          <td class="px-4 py-2 border-b"><%= book.copies_sold %></td>
-          <td class="px-4 py-2 border-b"><%= book.price %></td>
-          <td class="px-4 py-2 border-b"><%= book.pages %></td>
-          <% if show_author %>
-            <td class="px-4 py-2 border-b"><%= link_to book.author.name, author_path(book.author), class: "text-blue-500 hover:underline" %></td>
-          <% end %>
-          <td class="px-4 py-2 border-b">
-            <%= link_to "Show", book, class: "text-blue-500 hover:underline mr-2" %>
-            <%= link_to "Edit", edit_book_path(book), class: "text-green-500 hover:underline mr-2" %>
-            <%= link_to "Delete", book_path(book),
-                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                class: "text-red-500 hover:underline" %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="overflow-x-auto -mx-4 sm:mx-0">
+    <div class="inline-block min-w-full align-middle">
+      <div class="overflow-hidden border border-gray-300 rounded-lg">
+        <table class="min-w-full divide-y divide-gray-300 bg-white">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                <%= sortable_column(:title, "Title") %>
+              </th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <%= sortable_column(:isbn, "ISBN") %>
+              </th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Description</th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden sm:table-cell">
+                <%= sortable_column(:publication_date, "Pub. Date") %>
+              </th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <%= sortable_column(:copies_sold, "Sold") %>
+              </th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <%= sortable_column(:price, "Price") %>
+              </th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <%= sortable_column(:pages, "Pages") %>
+              </th>
+              <% if show_author %>
+                <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Author</th>
+              <% end %>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% books.each do |book| %>
+              <tr id="book_<%= book.id %>" class="hover:bg-gray-50">
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><%= book.title %></div>
+                  <div class="text-xs text-gray-500 md:hidden">ISBN: <%= book.isbn %></div>
+                </td>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden md:table-cell">
+                  <%= book.isbn %>
+                </td>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 text-sm text-gray-900 hidden lg:table-cell">
+                  <div class="max-w-xs truncate"><%= book.description %></div>
+                </td>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden sm:table-cell">
+                  <%= book.publication_date %>
+                </td>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden lg:table-cell">
+                  <%= book.copies_sold %>
+                </td>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden md:table-cell">
+                  $<%= sprintf("%.2f", book.price) %>
+                </td>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden lg:table-cell">
+                  <%= book.pages %>
+                </td>
+                <% if show_author %>
+                  <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden md:table-cell">
+                    <%= link_to book.author.name, author_path(book.author), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                  </td>
+                <% end %>
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                    <%= link_to "Show", book, class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                    <%= link_to "Edit", edit_book_path(book), class: "text-green-600 hover:text-green-800 hover:underline" %>
+                    <%= link_to "Delete", book_path(book),
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                        class: "text-red-600 hover:text-red-800 hover:underline" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
   <% if pagy && pagy.pages > 1 %>
     <div class="mt-6 flex justify-center">

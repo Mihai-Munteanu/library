@@ -15,6 +15,7 @@
           <th class="px-4 py-2 border-b"><%= sortable_column(:name, "Name") %></th>
           <th class="px-4 py-2 border-b"><%= sortable_column(:nationality, "Nationality") %></th>
           <th class="px-4 py-2 border-b"><%= sortable_column(:birth_date, "Birth Date") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:death_date, "Death Date") %></th>
           <th class="px-4 py-2 border-b">Actions</th>
         </tr>
       </thead>
@@ -24,6 +25,7 @@
             <td class="px-4 py-2 border-b"><%= author.name %></td>
             <td class="px-4 py-2 border-b"><%= author.nationality %></td>
             <td class="px-4 py-2 border-b"><%= author.birth_date %></td>
+            <td class="px-4 py-2 border-b"><%= author.death_date %></td>
             <td class="px-4 py-2 border-b">
               <%= link_to "Show", author, class: "text-blue-500 hover:underline mr-2" %>
               <%= link_to "Edit", edit_author_path(author), class: "text-green-500 hover:underline mr-2" %>
