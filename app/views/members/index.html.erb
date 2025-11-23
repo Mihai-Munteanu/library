@@ -10,20 +10,24 @@
     <%= link_to "New member", new_member_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
   </div>
 
+  <%= render "shared/filters",
+      filter_fields: { name: "text", email: "text", gender: "select", is_active: "boolean", is_vip: "boolean" },
+      options: { gender: Member.genders.keys } %>
+
   <div id="members" class="min-w-full divide-y divide-gray-200 space-y-5 mt-8">
     <% if @members.any? %>
       <table class="min-w-full bg-white border border-gray-300">
         <thead class="bg-gray-100">
           <tr>
-            <th class="px-4 py-2 border-b">Name</th>
-            <th class="px-4 py-2 border-b">Email</th>
-            <th class="px-4 py-2 border-b">Birth Date</th>
+            <th class="px-4 py-2 border-b"><%= sortable_column(:name, "Name") %></th>
+            <th class="px-4 py-2 border-b"><%= sortable_column(:email, "Email") %></th>
+            <th class="px-4 py-2 border-b"><%= sortable_column(:birth_date, "Birth Date") %></th>
             <th class="px-4 py-2 border-b">Gender</th>
             <th class="px-4 py-2 border-b">Is Active</th>
             <th class="px-4 py-2 border-b">Is VIP</th>
             <th class="px-4 py-2 border-b">Is Admin</th>
-            <th class="px-4 py-2 border-b">Balance</th>
-            <th class="px-4 py-2 border-b">Total Spent</th>
+            <th class="px-4 py-2 border-b"><%= sortable_column(:balance, "Balance") %></th>
+            <th class="px-4 py-2 border-b"><%= sortable_column(:total_spent, "Total Spent") %></th>
             <th class="px-4 py-2 border-b">Discount Rate</th>
             <th class="px-4 py-2 border-b">Points</th>
             <th class="px-4 py-2 border-b">Books Borrowed</th>
@@ -56,11 +60,12 @@
           <% end %>
         </tbody>
       </table>
-      <div class="mt-6">
-        <tr>
-          <td colspan="4"><%== @pagy.series_nav %></td>
-        </tr>
-      </div>
+
+      <% if @pagy && @pagy.pages > 1 %>
+        <div class="mt-6 flex justify-center">
+          <%== @pagy.series_nav %>
+        </div>
+      <% end %>
     <% else %>
       <p class="text-gray-500">No members yet. <%= link_to "Create one", new_member_path, class: "text-blue-500 hover:underline" %>!</p>
     <% end %>

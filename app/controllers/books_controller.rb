@@ -2,8 +2,10 @@ class BooksController < ApplicationController
   before_action :set_book, only: [:show, :edit, :update, :destroy]
 
   def index
-    @books = Book.order(created_at: :desc)
-    @pagy, @books = pagy(:offset, @books)
+    @books = Book.includes(:author).all
+    @books = apply_filters(@books, [:title, :isbn, :author_id])
+    @books = apply_sorting(@books, { created_at: :desc })
+    @pagy, @books = pagy(:offset, @books, items: 10)
   end
 
   def show

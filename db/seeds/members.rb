@@ -21,7 +21,7 @@ module Seeds
           name: Faker::Name.name,
           email: Faker::Internet.email,
           birth_date: birth_date,
-          gender: Member.genders.keys.sample,
+          gender: Member.genders.values.sample,
           is_active: [true, false].sample,
           is_vip: [true, false].sample,
           is_admin: [true, false].sample,

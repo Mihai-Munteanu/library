@@ -12,17 +12,21 @@
     <%= link_to "New Book", new_book_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
   </div>
 
+  <%= render "shared/filters",
+      filter_fields: { title: "text", isbn: "text", author_id: "select" },
+      options: { author_id: Author.all.map { |a| [a.name, a.id] } } %>
+
   <% if @books.any? %>
     <table class="min-w-full bg-white border border-gray-300">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-4 py-2 border-b">Title</th>
-          <th class="px-4 py-2 border-b">ISBN</th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:title, "Title") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:isbn, "ISBN") %></th>
           <th class="px-4 py-2 border-b">Description</th>
-          <th class="px-4 py-2 border-b">Publication Date</th>
-          <th class="px-4 py-2 border-b">Copies Sold</th>
-          <th class="px-4 py-2 border-b">Price</th>
-          <th class="px-4 py-2 border-b">Pages</th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:publication_date, "Publication Date") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:copies_sold, "Copies Sold") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:price, "Price") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:pages, "Pages") %></th>
           <th class="px-4 py-2 border-b">Author</th>
           <th class="px-4 py-2 border-b">Actions</th>
         </tr>
@@ -49,11 +53,12 @@
         <% end %>
       </tbody>
     </table>
-    <div class="mt-6">
-        <tr>
-          <td colspan="4"><%== @pagy.series_nav %></td>
-        </tr>
-    </div>
+
+    <% if @pagy && @pagy.pages > 1 %>
+      <div class="mt-6 flex justify-center">
+        <%== @pagy.series_nav %>
+      </div>
+    <% end %>
   <% else %>
     <p class="text-gray-500">No books yet. <%= link_to "Create one", new_book_path, class: "text-blue-500 hover:underline" %>!</p>
   <% end %>

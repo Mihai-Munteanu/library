@@ -1,0 +1,60 @@
+<%#
+  Filter partial component
+  Usage: <%= render "shared/filters", filter_fields: { name: "text", nationality: "text", gender: "select" }, options: { gender: Author.genders.values } %>
+<% if local_assigns[:filter_fields] && filter_fields.any? %>
+  <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-semibold text-gray-700">Filters</h3>
+      <%= link_to "Clear", request.path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+    </div>
+
+    <%= form_with url: request.path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4" do |f| %>
+      <%# Preserve sort params %>
+      <%= hidden_field_tag :sort, params[:sort] if params[:sort] %>
+      <%= hidden_field_tag :direction, params[:direction] if params[:direction] %>
+
+      <% filter_fields.each do |field, field_type| %>
+        <div>
+          <% case field_type %>
+          <% when "text" %>
+            <%= f.label field, field.to_s.humanize, class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field field,
+                value: params[field],
+                placeholder: "Filter by #{field.to_s.humanize}",
+                class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          <% when "select" %>
+            <%= f.label field, field.to_s.humanize, class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%
+              select_options = if local_assigns[:options] && options[field] && options[field].any?
+                # Handle array of arrays (for foreign keys like [[name, id], ...])
+                if options[field].first.is_a?(Array)
+                  [["All", ""]] + options[field]
+                else
+                  # Handle array of strings/symbols (for enums)
+                  [["All", ""]] + options[field].map { |opt| [opt.to_s.humanize, opt.to_s] }
+                end
+              else
+                [["All", ""]]
+              end
+            %>
+            <%= f.select field,
+                options_for_select(select_options, params[field]),
+                {},
+                { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+          <% when "boolean" %>
+            <%= f.label field, field.to_s.humanize, class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.select field,
+                options_for_select([["All", ""], ["Yes", "true"], ["No", "false"]], params[field]),
+                {},
+                { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="flex items-end">
+        <%= f.submit "Apply Filters", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+

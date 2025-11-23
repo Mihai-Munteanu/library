@@ -3,8 +3,10 @@ class MembersController < ApplicationController
 
   # GET /members or /members.json
   def index
-    @members = Member.order(created_at: :desc)
-    @pagy, @members = pagy(:offset, @members)
+    @members = Member.all
+    @members = apply_filters(@members, [:name, :email, :gender, :is_active, :is_vip])
+    @members = apply_sorting(@members, { created_at: :desc })
+    @pagy, @members = pagy(:offset, @members, items: 10)
   end
 
   # GET /members/1 or /members/1.json

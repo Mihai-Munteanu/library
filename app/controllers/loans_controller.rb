@@ -3,8 +3,10 @@ class LoansController < ApplicationController
 
   # GET /loans or /loans.json
   def index
-    @loans = Loan.order(created_at: :desc)
-    @pagy, @loans = pagy(:offset, @loans)
+    @loans = Loan.includes(:member, :book).all
+    @loans = apply_filters(@loans, [:member_id, :book_id, :status])
+    @loans = apply_sorting(@loans, { created_at: :desc })
+    @pagy, @loans = pagy(:offset, @loans, items: 10)
   end
 
   # GET /loans/1 or /loans/1.json

@@ -4,13 +4,17 @@
     <%= link_to "New Author", new_author_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
   </div>
 
+  <%= render "shared/filters",
+      filter_fields: { name: "text", nationality: "text", gender: "select" },
+      options: { gender: Author.genders.keys } %>
+
   <% if @authors.any? %>
     <table class="min-w-full bg-white border border-gray-300">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-4 py-2 border-b">Name</th>
-          <th class="px-4 py-2 border-b">Nationality</th>
-          <th class="px-4 py-2 border-b">Birth Date</th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:name, "Name") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:nationality, "Nationality") %></th>
+          <th class="px-4 py-2 border-b"><%= sortable_column(:birth_date, "Birth Date") %></th>
           <th class="px-4 py-2 border-b">Actions</th>
         </tr>
       </thead>
@@ -31,11 +35,12 @@
         <% end %>
       </tbody>
     </table>
-    <div class="mt-6">
-        <tr>
-          <td colspan="4"><%== @pagy.series_nav %></td>
-        </tr>
-    </div>
+
+    <% if @pagy && @pagy.pages > 1 %>
+      <div class="mt-6 flex justify-center">
+        <%== @pagy.series_nav %>
+      </div>
+    <% end %>
   <% else %>
     <p class="text-gray-500">No authors yet. <%= link_to "Create one", new_author_path, class: "text-blue-500 hover:underline" %>!</p>
   <% end %>

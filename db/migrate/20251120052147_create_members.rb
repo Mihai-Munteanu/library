@@ -4,7 +4,7 @@ class CreateMembers < ActiveRecord::Migration[8.1]
       t.string :name
       t.string :email
       t.date :birth_date
-      t.string :gender
+      t.integer :gender
       t.boolean :is_active, default: true
       t.boolean :is_vip, default: false
       t.boolean :is_admin, default: false

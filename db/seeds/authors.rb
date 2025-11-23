@@ -26,7 +26,7 @@ module Seeds
         end
 
         # Generate gender
-        gender = Author.genders.keys.sample
+        gender = Author.genders.values.sample
 
         # Build author attributes hash
         author_attributes = {
