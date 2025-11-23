@@ -1,49 +1,87 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Authors</h1>
-    <%= link_to "New Author", new_author_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Authors</h1>
+    <%= link_to "New Author", new_author_path,
+        class: "bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
   </div>
 
-  <%= render "shared/filters",
-      filter_fields: { name: "text", nationality: "text", gender: "select" },
-      options: { gender: Author.genders.keys } %>
+  <!-- Filters Section -->
+  <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 py-4 mb-6">
+    <%= render "shared/filters",
+        filter_fields: { name: "text", nationality: "text", gender: "select" },
+        options: { gender: Author.genders.keys } %>
+  </div>
 
+  <!-- Authors Table -->
   <% if @authors.any? %>
-    <table class="min-w-full bg-white border border-gray-300">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:name, "Name") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:nationality, "Nationality") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:birth_date, "Birth Date") %></th>
-          <th class="px-4 py-2 border-b"><%= sortable_column(:death_date, "Death Date") %></th>
-          <th class="px-4 py-2 border-b">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @authors.each do |author| %>
-          <tr id="author_<%= author.id %>">
-            <td class="px-4 py-2 border-b"><%= author.name %></td>
-            <td class="px-4 py-2 border-b"><%= author.nationality %></td>
-            <td class="px-4 py-2 border-b"><%= author.birth_date %></td>
-            <td class="px-4 py-2 border-b"><%= author.death_date %></td>
-            <td class="px-4 py-2 border-b">
-              <%= link_to "Show", author, class: "text-blue-500 hover:underline mr-2" %>
-              <%= link_to "Edit", edit_author_path(author), class: "text-green-500 hover:underline mr-2" %>
-              <%= link_to "Delete", author_path(author),
-                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                  class: "text-red-500 hover:underline" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= sortable_column(:name, "Name") %>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= sortable_column(:nationality, "Nationality") %>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= sortable_column(:birth_date, "Birth Date") %>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= sortable_column(:death_date, "Death Date") %>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @authors.each do |author| %>
+              <tr id="author_<%= author.id %>" class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><%= author.name %></div>
+                </td>
+                <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><%= author.nationality || "N/A" %></div>
+                </td>
+                <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><%= author.birth_date || "N/A" %></div>
+                </td>
+                <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><%= author.death_date || "N/A" %></div>
+                </td>
+                <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end gap-2">
+                    <%= link_to "Show", author,
+                        class: "text-blue-600 hover:text-blue-900 hover:underline transition-colors" %>
+                    <%= link_to "Edit", edit_author_path(author),
+                        class: "text-green-600 hover:text-green-900 hover:underline transition-colors" %>
+                    <%= link_to "Delete", author_path(author),
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                        class: "text-red-600 hover:text-red-900 hover:underline transition-colors" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
+    <!-- Pagination -->
     <% if @pagy && @pagy.pages > 1 %>
       <div class="mt-6 flex justify-center">
         <%== @pagy.series_nav %>
       </div>
     <% end %>
   <% else %>
-    <p class="text-gray-500">No authors yet. <%= link_to "Create one", new_author_path, class: "text-blue-500 hover:underline" %>!</p>
+    <!-- Empty State -->
+    <div class="bg-white shadow-md rounded-lg px-6 py-12 text-center">
+      <p class="text-gray-500 text-lg mb-4">No authors found.</p>
+      <%= link_to "Create your first author", new_author_path,
+          class: "inline-block bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors shadow-md hover:shadow-lg" %>
+    </div>
   <% end %>
 </div>

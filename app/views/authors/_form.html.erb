@@ -1,97 +1,152 @@
 <%= form_with(model: author, local: true) do |form| %>
   <% if author.errors.any? %>
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-      <h2 class="font-bold"><%= pluralize(author.errors.count, "error") %> prohibited this author from being saved:</h2>
-      <ul class="list-disc list-inside">
-        <% author.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+    <div class="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= pluralize(author.errors.count, "error") %> prohibited this author from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul class="list-disc list-inside space-y-1">
+              <% author.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   <% end %>
 
-  <div class="mb-4">
-    <%= form.label :name, class: "block text-gray-700 font-bold mb-2"  do %>
-      Name <span class="text-red-500">*</span>
-    <% end %>
-    <%= form.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  <!-- Basic Information Section -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Basic Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div class="md:col-span-2">
+        <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Name <span class="text-red-500">*</span>
+        <% end %>
+        <%= form.text_field :name,
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
+
+      <div>
+        <%= form.label :birth_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Birth Date <span class="text-red-500">*</span>
+        <% end %>
+        <%= form.date_field :birth_date,
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
+
+      <div>
+        <%= form.label :death_date, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.date_field :death_date,
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
+
+      <div>
+        <%= form.label :nationality, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Nationality <span class="text-red-500">*</span>
+        <% end %>
+        <%= form.text_field :nationality,
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
+
+      <div>
+        <%= form.label :gender, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Gender <span class="text-red-500">*</span>
+        <% end %>
+        <%= form.select :gender,
+            Author.genders.keys.map { |g| [g.humanize, g] },
+            { prompt: "Select gender" },
+            { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" } %>
+      </div>
+
+      <div class="md:col-span-2">
+        <%= form.label :biography, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :biography, rows: 5,
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <p class="mt-1 text-sm text-gray-500">Maximum 1000 characters</p>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :biography, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.text_area :biography, rows: 5, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  <!-- Additional Information Section -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Additional Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div>
+        <%= form.label :number_of_books, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.number_field :number_of_books,
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :birth_date, class: "block text-gray-700 font-bold mb-2"  do %>
-      Birth Date <span class="text-red-500">*</span>
-    <% end %>
-    <%= form.date_field :birth_date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :death_date, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.date_field :death_date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :nationality, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.text_field :nationality, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :gender, class: "block text-gray-700 font-bold mb-2" do %>
-      Gender <span class="text-red-500">*</span>
-    <% end %>
-    <%= form.select :gender,
-        Author.genders.keys.map { |g| [g.humanize, g] },
-        { prompt: "Select gender" },
-        { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :number_of_books, class: "block text-gray-700 font-bold mb-2" %>
-    <%= form.number_field :number_of_books, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-  </div>
-
-  <div class="mb-6 border-t pt-4">
-    <h3 class="text-lg font-bold text-gray-700 mb-4">Metadata</h3>
-
+  <!-- Metadata Section -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Metadata</h2>
     <% metadata = author.metadata || {} %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div>
+        <%= form.label :metadata_website, "Website", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= text_field_tag "author[metadata][website]", metadata["website"],
+            placeholder: "https://example.com",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
 
-    <div class="mb-4">
-      <%= form.label :metadata_website, "Website", class: "block text-gray-700 font-bold mb-2" %>
-      <%= text_field_tag "author[metadata][website]", metadata["website"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-    </div>
+      <div>
+        <%= form.label :metadata_email, "Email", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= email_field_tag "author[metadata][email]", metadata["email"],
+            placeholder: "author@example.com",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
 
-    <div class="mb-4">
-      <%= form.label :metadata_email, "Email", class: "block text-gray-700 font-bold mb-2" %>
-      <%= email_field_tag "author[metadata][email]", metadata["email"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-    </div>
+      <div>
+        <%= form.label :metadata_twitter, "Twitter", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= text_field_tag "author[metadata][twitter]", metadata["twitter"],
+            placeholder: "@username",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
 
-    <div class="mb-4">
-      <%= form.label :metadata_twitter, "Twitter", class: "block text-gray-700 font-bold mb-2" %>
-      <%= text_field_tag "author[metadata][twitter]", metadata["twitter"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-    </div>
+      <div>
+        <%= form.label :metadata_facebook, "Facebook", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= text_field_tag "author[metadata][facebook]", metadata["facebook"],
+            placeholder: "https://facebook.com/username",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
 
-    <div class="mb-4">
-      <%= form.label :metadata_facebook, "Facebook", class: "block text-gray-700 font-bold mb-2" %>
-      <%= text_field_tag "author[metadata][facebook]", metadata["facebook"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-    </div>
+      <div>
+        <%= form.label :metadata_tags, "Tags", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= text_field_tag "author[metadata][tags]", metadata["tags"],
+            placeholder: "fiction, mystery, thriller",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <p class="mt-1 text-sm text-gray-500">Separate tags with commas</p>
+      </div>
 
-    <div class="mb-4">
-      <%= form.label :metadata_tags, "Tags", class: "block text-gray-700 font-bold mb-2" %>
-      <%= text_field_tag "author[metadata][tags]", metadata["tags"], class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-    </div>
-
-    <div class="mb-4">
-      <%= form.label :metadata_notes, "Notes", class: "block text-gray-700 font-bold mb-2" %>
-      <%= text_area_tag "author[metadata][notes]", metadata["notes"], rows: 3, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <div class="md:col-span-2">
+        <%= form.label :metadata_notes, "Notes", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= text_area_tag "author[metadata][notes]", metadata["notes"], rows: 3,
+            placeholder: "Additional notes about the author...",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+      </div>
     </div>
   </div>
 
-  <div class="flex items-center justify-between">
-    <%= form.submit class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
-    <%= link_to "Cancel", authors_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+  <!-- Form Actions -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
+    <p class="text-sm text-gray-500">
+      <span class="text-red-500">*</span> Required fields
+    </p>
+    <div class="flex gap-3 w-full sm:w-auto">
+      <%= link_to "Cancel", authors_path,
+          class: "w-full sm:w-auto bg-gray-500 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
+      <%= form.submit class: "w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+    </div>
   </div>
 <% end %>
