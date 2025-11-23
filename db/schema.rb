@@ -12,16 +12,14 @@
 
 ActiveRecord::Schema[8.1].define(version: 2025_11_20_212505) do
   create_table "authors", force: :cascade do |t|
-    t.json "achievements"
-    t.json "awards"
     t.text "biography"
     t.date "birth_date"
     t.datetime "created_at", null: false
     t.date "death_date"
-    t.string "gender"
+    t.integer "gender"
+    t.json "metadata"
     t.string "name"
     t.string "nationality"
-    t.json "publications"
     t.datetime "updated_at", null: false
     t.index ["birth_date"], name: "index_authors_on_birth_date"
     t.index ["death_date"], name: "index_authors_on_death_date"
@@ -73,7 +71,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_20_212505) do
     t.datetime "created_at", null: false
     t.float "discount_rate", default: 0.0
     t.string "email"
-    t.string "gender"
+    t.integer "gender"
     t.boolean "is_active", default: true
     t.boolean "is_admin", default: false
     t.boolean "is_vip", default: false

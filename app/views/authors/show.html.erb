@@ -44,39 +44,6 @@
           <%= @author.biography.present? ? simple_format(@author.biography) : content_tag(:span, "No biography available.", class: "text-gray-400 italic") %>
         </dd>
       </div>
-
-      <% if @author.awards.present? %>
-        <div class="sm:col-span-2 lg:col-span-3">
-          <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Awards</dt>
-          <dd class="text-base text-gray-900">
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 overflow-x-auto">
-              <pre class="text-xs sm:text-sm whitespace-pre-wrap"><%= JSON.pretty_generate(@author.awards) %></pre>
-            </div>
-          </dd>
-        </div>
-      <% end %>
-
-      <% if @author.publications.present? %>
-        <div class="sm:col-span-2 lg:col-span-3">
-          <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Publications</dt>
-          <dd class="text-base text-gray-900">
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 overflow-x-auto">
-              <pre class="text-xs sm:text-sm whitespace-pre-wrap"><%= JSON.pretty_generate(@author.publications) %></pre>
-            </div>
-          </dd>
-        </div>
-      <% end %>
-
-      <% if @author.achievements.present? %>
-        <div class="sm:col-span-2 lg:col-span-3">
-          <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Achievements</dt>
-          <dd class="text-base text-gray-900">
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 overflow-x-auto">
-              <pre class="text-xs sm:text-sm whitespace-pre-wrap"><%= JSON.pretty_generate(@author.achievements) %></pre>
-            </div>
-          </dd>
-        </div>
-      <% end %>
     </dl>
   </div>
 

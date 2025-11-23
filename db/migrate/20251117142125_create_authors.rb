@@ -7,9 +7,7 @@ class CreateAuthors < ActiveRecord::Migration[8.1]
       t.date :death_date
       t.string :nationality
       t.integer :gender
-      t.json :awards
-      t.json :publications
-      t.json :achievements
+      t.json :metadata
 
       t.index :name
       t.index :birth_date

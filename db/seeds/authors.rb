@@ -27,6 +27,14 @@ module Seeds
 
         # Generate gender
         gender = Author.genders.values.sample
+        metadata = {
+          website: Faker::Internet.url,
+          email: Faker::Internet.email,
+          twitter: Faker::Internet.username,
+          facebook: Faker::Internet.username,
+          tags: Faker::Lorem.words(number: rand(1..5)),
+          notes: Faker::Lorem.paragraph(sentence_count: 2..5)
+        }
 
         # Build author attributes hash
         author_attributes = {
@@ -35,43 +43,12 @@ module Seeds
           birth_date: birth_date,
           death_date: death_date,
           nationality: Faker::Address.country,
-          gender: gender
+          gender: gender,
+          metadata: metadata
         }
 
-        # Conditionally add awards (40% chance)
-        if rand < 0.4
-          author_attributes[:awards] = Array.new(rand(1..4)) do
-            {
-              name: Faker::Book.title,
-              year: Faker::Number.between(from: 1950, to: 2024).to_s,
-              description: Faker::Lorem.sentence
-            }
-          end.compact
-        end
-
-        # Conditionally add publications (50% chance)
-        if rand < 0.5
-          author_attributes[:publications] = Array.new(rand(1..4)) do
-            {
-              title: Faker::Book.title,
-              publication_date: Faker::Date.between(from: birth_date + 20.years, to: death_date || Date.today).to_s
-            }
-          end.compact
-        end
-
-        # Conditionally add achievements (30% chance)
-        if rand < 0.3
-          author_attributes[:achievements] = Array.new(rand(1..4)) do
-            {
-              name: Faker::Job.title,
-              year: Faker::Number.between(from: 1950, to: 2024).to_s,
-              description: Faker::Lorem.sentence
-            }
-          end.compact
-        end
-
         # Create author with all attributes
-        author = Author.create!(author_attributes)
+        Author.create!(author_attributes)
 
         print "." if (i + 1) % 10 == 0
       end
@@ -81,4 +58,3 @@ module Seeds
     end
   end
 end
-
