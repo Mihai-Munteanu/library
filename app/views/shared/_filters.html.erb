@@ -2,13 +2,25 @@
   Filter partial component
   Usage: <%= render "shared/filters", filter_fields: { name: "text", nationality: "text", gender: "select" }, options: { gender: Author.genders.values } %>
 <% if local_assigns[:filter_fields] && filter_fields.any? %>
+  <%
+    # Determine the correct form action URL
+    # For authors, always use authors_path to avoid issues after Turbo Stream updates
+    # For other resources, use request.path but ensure it's the index path
+    form_url = if request.path.start_with?("/authors")
+      authors_path
+    else
+      # Extract base path (remove ID if present) for other resources
+      base_path = request.path.split("/").reject(&:empty?).first(2).join("/")
+      base_path = "/#{base_path}" unless base_path.start_with?("/")
+      base_path
+    end
+  %>
   <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-sm font-semibold text-gray-700">Filters</h3>
-      <%= link_to "Clear", request.path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+      <%= link_to "Clear", form_url, class: "text-sm text-blue-600 hover:text-blue-800" %>
     </div>
-
-    <%= form_with url: request.path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4" do |f| %>
+    <%= form_with url: form_url, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4" do |f| %>
       <%# Preserve sort params %>
       <%= hidden_field_tag :sort, params[:sort] if params[:sort] %>
       <%= hidden_field_tag :direction, params[:direction] if params[:direction] %>

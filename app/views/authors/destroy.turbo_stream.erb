@@ -1,2 +1,28 @@
-<%= turbo_stream.remove "author_#{@author.id}" %>
-
+<%
+  redirect_to = params[:redirect_to]
+  from_page = params[:from_page]
+%>
+<% if from_page == "index" && @authors.present? %>
+  <%# From index page: update the authors table with refreshed data %>
+  <%= turbo_stream.update "authors-table-container" do %>
+    <%= render "authors_table" %>
+  <% end %>
+  <%= turbo_stream.update "modal", "" %>
+<% elsif from_page == "show" && redirect_to.present? %>
+  <%# From show page: redirect to index %>
+  <%= turbo_stream.update "modal", "" %>
+  <%= turbo_stream.append "body" do %>
+    <script>
+      window.location.href = '<%= j(redirect_to) %>';
+    </script>
+  <% end %>
+<% else %>
+  <%# Fallback: remove row and redirect %>
+  <%= turbo_stream.remove dom_id(@author) %>
+  <%= turbo_stream.update "modal", "" %>
+  <%= turbo_stream.append "body" do %>
+    <script>
+      window.location.href = '<%= j(redirect_to || authors_path) %>';
+    </script>
+  <% end %>
+<% end %>

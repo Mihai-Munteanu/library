@@ -1,0 +1,36 @@
+<%
+  close_url = local_assigns.fetch(:close_url, request.referer || root_path)
+  size = local_assigns.fetch(:size, :medium) # :small, :medium, :large, :xl
+  show_close_button = local_assigns.fetch(:show_close_button, true)
+
+  size_classes = {
+    small: "max-w-sm",
+    medium: "max-w-md",
+    large: "max-w-lg",
+    xl: "max-w-2xl"
+  }
+
+  max_width = size_classes[size] || size_classes[:medium]
+%>
+
+<div class="fixed inset-0 bg-transparent bg-opacity-30 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4" id="modal-backdrop">
+  <div class="relative mx-auto p-5 border w-full <%= max_width %> shadow-xl rounded-lg bg-white">
+    <% if show_close_button %>
+      <!-- Close button (X) -->
+      <div class="flex justify-end">
+        <button type="button"
+            class="text-gray-400 hover:text-gray-600 text-3xl font-bold leading-none transition-colors"
+            onclick="document.getElementById('modal').innerHTML = ''; document.getElementById('modal-backdrop')?.remove();">
+          ×
+        </button>
+      </div>
+    <% end %>
+
+    <!-- Modal Content -->
+    <div class="<%= show_close_button ? 'mt-3' : '' %>">
+      <%= yield %>
+    </div>
+  </div>
+</div>
+
+

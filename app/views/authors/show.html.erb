@@ -6,6 +6,8 @@
       <%= link_to "Edit", edit_author_path(@author),
           class: "bg-green-500 hover:bg-green-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
       <%= back_button_with_fallback(authors_path, text: "Back") %>
+      <%= modal_link_to "Delete", delete_confirmation_author_path(@author, from_page: "show"),
+          class: "bg-red-500 hover:bg-red-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
     </div>
   </div>
 
