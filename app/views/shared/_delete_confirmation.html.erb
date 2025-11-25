@@ -1,0 +1,96 @@
+<%
+  # Extract configuration from locals or infer from resource
+  resource = local_assigns.fetch(:resource)
+  resource_name = local_assigns.fetch(:resource_name, resource.class.name.humanize)
+  resource_path = local_assigns.fetch(:resource_path) # Required: e.g., author_path(@author)
+  index_path = local_assigns.fetch(:index_path) # Required: e.g., authors_path
+  display_attribute = local_assigns.fetch(:display_attribute, :name)
+  table_container_id = local_assigns.fetch(:table_container_id, "#{resource.class.name.underscore.pluralize}-table-container")
+  table_partial = local_assigns.fetch(:table_partial, "#{resource.class.name.underscore.pluralize}/#{resource.class.name.underscore.pluralize}_table")
+
+  # Determine where the modal was opened from
+  resource_path_prefix = "/#{resource.class.name.underscore.pluralize}/"
+  from_page = params[:from_page] || (request.referer&.include?(resource_path_prefix) && !request.referer&.include?("/#{resource.class.name.underscore.pluralize}/new") && !request.referer&.include?("/#{resource.class.name.underscore.pluralize}?") ? "show" : "index")
+  redirect_after_delete = from_page == "show" ? index_path : nil
+
+  # For index page, use return_to param if provided, otherwise fallback to referer
+  # Remove page parameter to let Pagy recalculate the correct page
+  if from_page == "index"
+    return_to_url = params[:return_to].presence || request.referer
+    if return_to_url.present?
+      uri = URI.parse(return_to_url)
+      query_params = URI.decode_www_form(uri.query || "").to_h
+      query_params.delete("page") # Remove page param to let Pagy recalculate
+      query_string = URI.encode_www_form(query_params)
+      current_index_url = query_string.present? ? "#{uri.path}?#{query_string}" : uri.path
+    else
+      current_index_url = nil
+    end
+  else
+    current_index_url = nil
+  end
+
+  # Get display value
+  display_value = resource.public_send(display_attribute) if resource.respond_to?(display_attribute)
+%>
+<%= turbo_frame_tag "modal" do %>
+  <%= render "shared/modal", close_url: "#", show_close_button: true do %>
+    <!-- Modal Icon -->
+    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+      <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+    </div>
+
+    <!-- Modal Title -->
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Delete <%= resource_name %></h3>
+
+    <!-- Modal Message -->
+    <div class="mt-2 px-7 py-3">
+      <p class="text-sm text-gray-500">
+        Are you sure you want to delete <strong><%= display_value %></strong>?
+        This action cannot be undone.
+      </p>
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="flex items-center justify-center gap-3 px-4 py-3">
+      <% if from_page == "show" %>
+        <%= button_to "Delete",
+            resource_path,
+            method: :delete,
+            params: { redirect_to: redirect_after_delete, from_page: from_page },
+            class: "px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors",
+            data: { turbo: false } %>
+      <% else %>
+        <%# Extract filter and sort params from return_to URL to pass them through %>
+        <% filter_params = {} %>
+        <% if params[:return_to].present? %>
+          <% begin %>
+            <% uri = URI.parse(params[:return_to]) %>
+            <% query_params = URI.decode_www_form(uri.query || "").to_h if uri.query %>
+            <% if query_params %>
+              <% filter_params = query_params.except("page", "redirect_to", "from_page", "controller", "action", "id") %>
+            <% end %>
+          <% rescue %>
+            <%# If parsing fails, use request.query_parameters as fallback %>
+            <% filter_params = request.query_parameters.except(:page, :redirect_to, :from_page, :controller, :action, :id) %>
+          <% end %>
+        <% else %>
+          <% filter_params = request.query_parameters.except(:page, :redirect_to, :from_page, :controller, :action, :id) %>
+        <% end %>
+        <%= button_to "Delete",
+            resource_path,
+            method: :delete,
+            params: { redirect_to: current_index_url, from_page: from_page }.merge(filter_params),
+            class: "px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors",
+            data: { turbo_frame: "modal" } %>
+      <% end %>
+
+      <%= button_tag "Cancel",
+          type: "button",
+          class: "px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors",
+          onclick: "document.getElementById('modal').innerHTML = ''; document.getElementById('modal-backdrop')?.remove();" %>
+    </div>
+  <% end %>
+<% end %>
