@@ -1,129 +1,66 @@
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-  <!-- Header Section - Responsive -->
-  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900"><%= @author.name %></h1>
-    <div class="flex flex-col sm:flex-row gap-2">
-      <%= link_to "Edit", edit_author_path(@author),
-          class: "bg-green-500 hover:bg-green-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
-      <%= back_button_with_fallback(authors_path, text: "Back") %>
-      <%= modal_link_to "Delete", delete_confirmation_author_path(@author, from_page: "show"),
-          class: "bg-red-500 hover:bg-red-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
-    </div>
-  </div>
+<%
+  # Prepare basic information fields
+  basic_fields = [
+    { label: "Name", value: @author.name },
+    { label: "Nationality", value: @author.nationality || "N/A" },
+    { label: "Gender", value: @author.gender&.humanize || "N/A" },
+    { label: "Birth Date", value: @author.birth_date || "N/A" },
+    { label: "Death Date", value: @author.death_date || "N/A" },
+    {
+      label: "Biography",
+      value: @author.biography.present? ? simple_format(@author.biography) : content_tag(:span, "No biography available.", class: "text-gray-400 italic"),
+      col_span: "sm:col-span-2 lg:col-span-3",
+      value_class: "text-base text-gray-900 leading-relaxed"
+    }
+  ]
 
-  <!-- Author Details Card - Responsive Grid -->
-  <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 lg:px-8 pt-6 pb-8 mb-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Basic Information</h2>
-    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      <div class="sm:col-span-1">
-        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Name</dt>
-        <dd class="text-base sm:text-lg font-medium text-gray-900"><%= @author.name %></dd>
-      </div>
+  # Prepare metadata fields if present
+  metadata = @author.metadata || {}
+  metadata_fields = []
+  if metadata.values.any?(&:present?)
+    metadata_fields << { label: "Website", value: link_to(metadata["website"], metadata["website"], target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline") } if metadata["website"].present?
+    metadata_fields << { label: "Email", value: mail_to(metadata["email"], metadata["email"], class: "text-blue-600 hover:text-blue-800 hover:underline") } if metadata["email"].present?
+    metadata_fields << { label: "Twitter", value: link_to(metadata["twitter"], "https://twitter.com/#{metadata["twitter"].gsub(/^@/, '')}", target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline") } if metadata["twitter"].present?
+    metadata_fields << { label: "Facebook", value: link_to(metadata["facebook"], metadata["facebook"], target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline") } if metadata["facebook"].present?
 
-      <div class="sm:col-span-1">
-        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Nationality</dt>
-        <dd class="text-base sm:text-lg text-gray-900"><%= @author.nationality || "N/A" %></dd>
-      </div>
+    if metadata["tags"].present?
+      tags = metadata["tags"].is_a?(Array) ? metadata["tags"] : metadata["tags"].to_s.split(",").map(&:strip)
+      tags_html = content_tag(:div, class: "flex flex-wrap gap-2") do
+        safe_join(tags.map { |tag| content_tag(:span, tag.to_s.strip, class: "inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full") })
+      end
+      metadata_fields << { label: "Tags", value: tags_html, col_span: "sm:col-span-2" }
+    end
 
-      <div class="sm:col-span-1">
-        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Gender</dt>
-        <dd class="text-base sm:text-lg text-gray-900"><%= @author.gender&.humanize || "N/A" %></dd>
-      </div>
+    metadata_fields << { label: "Notes", value: simple_format(metadata["notes"]), col_span: "sm:col-span-2", value_class: "text-base text-gray-900 leading-relaxed" } if metadata["notes"].present?
+  end
 
-      <div class="sm:col-span-1">
-        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Birth Date</dt>
-        <dd class="text-base sm:text-lg text-gray-900"><%= @author.birth_date || "N/A" %></dd>
-      </div>
+  # Prepare details sections
+  details_sections = [
+    {
+      title: "Basic Information",
+      fields: basic_fields
+    }
+  ]
 
-      <div class="sm:col-span-1">
-        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Death Date</dt>
-        <dd class="text-base sm:text-lg text-gray-900"><%= @author.death_date || "N/A" %></dd>
-      </div>
-
-      <div class="sm:col-span-2 lg:col-span-3">
-        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Biography</dt>
-        <dd class="text-base text-gray-900 leading-relaxed">
-          <%= @author.biography.present? ? simple_format(@author.biography) : content_tag(:span, "No biography available.", class: "text-gray-400 italic") %>
-        </dd>
-      </div>
-    </dl>
-  </div>
-
-  <!-- Metadata Section -->
-  <% metadata = @author.metadata || {} %>
-  <% if metadata.values.any?(&:present?) %>
-    <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 lg:px-8 pt-6 pb-8 mb-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Additional Information</h2>
-      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-        <% if metadata["website"].present? %>
-          <div class="sm:col-span-1">
-            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Website</dt>
-            <dd class="text-base text-gray-900">
-              <%= link_to metadata["website"], metadata["website"], target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-            </dd>
-          </div>
-        <% end %>
-
-        <% if metadata["email"].present? %>
-          <div class="sm:col-span-1">
-            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Email</dt>
-            <dd class="text-base text-gray-900">
-              <%= mail_to metadata["email"], metadata["email"], class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-            </dd>
-          </div>
-        <% end %>
-
-        <% if metadata["twitter"].present? %>
-          <div class="sm:col-span-1">
-            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Twitter</dt>
-            <dd class="text-base text-gray-900">
-              <%= link_to metadata["twitter"], "https://twitter.com/#{metadata["twitter"].gsub(/^@/, '')}", target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-            </dd>
-          </div>
-        <% end %>
-
-        <% if metadata["facebook"].present? %>
-          <div class="sm:col-span-1">
-            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Facebook</dt>
-            <dd class="text-base text-gray-900">
-              <%= link_to metadata["facebook"], metadata["facebook"], target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-            </dd>
-          </div>
-        <% end %>
-
-        <% if metadata["tags"].present? %>
-          <div class="sm:col-span-2">
-            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Tags</dt>
-            <dd class="text-base text-gray-900">
-              <% tags = metadata["tags"].is_a?(Array) ? metadata["tags"] : metadata["tags"].to_s.split(",").map(&:strip) %>
-              <div class="flex flex-wrap gap-2">
-                <% tags.each do |tag| %>
-                  <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full"><%= tag.to_s.strip %></span>
-                <% end %>
-              </div>
-            </dd>
-          </div>
-        <% end %>
-
-        <% if metadata["notes"].present? %>
-          <div class="sm:col-span-2">
-            <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Notes</dt>
-            <dd class="text-base text-gray-900 leading-relaxed">
-              <%= simple_format(metadata["notes"]) %>
-            </dd>
-          </div>
-        <% end %>
-      </dl>
-    </div>
-  <% end %>
-
-  <!-- Books Section - Responsive Header -->
-  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
-    <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Books by <%= @author.name %></h2>
-    <%= link_to "Add New Book", new_book_path(author_id: @author.id),
-        class: "bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg w-full sm:w-auto" %>
-  </div>
-
-  <!-- Books Table Frame -->
-  <%= render "authors/books_table_frame" %>
-</div>
+  details_sections << {
+    title: "Additional Information",
+    fields: metadata_fields,
+    grid_cols: "grid-cols-1 sm:grid-cols-2"
+  } if metadata_fields.any?
+%>
+<%= render "shared/show_page",
+    resource: @author,
+    title: @author.name,
+    index_path: authors_path,
+    edit_path: edit_author_path(@author),
+    delete_confirmation_path: delete_confirmation_author_path(@author, from_page: "show"),
+    details_sections: details_sections,
+    related_sections: [
+      {
+        title: "Books by #{@author.name}",
+        new_path: new_book_path(author_id: @author.id),
+        new_text: "Add New Book",
+        partial: "authors/books_table_frame",
+        locals: {}
+      }
+    ] %>

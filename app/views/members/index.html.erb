@@ -1,73 +1,8 @@
-<% content_for :title, "Members" %>
-
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Members</h1>
-    <%= link_to "New member", new_member_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
-  </div>
-
-  <%= render "shared/filters",
-      filter_fields: { name: "text", email: "text", gender: "select", is_active: "boolean", is_vip: "boolean" },
-      options: { gender: Member.genders.keys } %>
-
-  <div id="members" class="min-w-full divide-y divide-gray-200 space-y-5 mt-8">
-    <% if @members.any? %>
-      <table class="min-w-full bg-white border border-gray-300">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="px-4 py-2 border-b"><%= sortable_column(:name, "Name") %></th>
-            <th class="px-4 py-2 border-b"><%= sortable_column(:email, "Email") %></th>
-            <th class="px-4 py-2 border-b"><%= sortable_column(:birth_date, "Birth Date") %></th>
-            <th class="px-4 py-2 border-b">Gender</th>
-            <th class="px-4 py-2 border-b">Is Active</th>
-            <th class="px-4 py-2 border-b">Is VIP</th>
-            <th class="px-4 py-2 border-b">Is Admin</th>
-            <th class="px-4 py-2 border-b"><%= sortable_column(:balance, "Balance") %></th>
-            <th class="px-4 py-2 border-b"><%= sortable_column(:total_spent, "Total Spent") %></th>
-            <th class="px-4 py-2 border-b">Discount Rate</th>
-            <th class="px-4 py-2 border-b">Points</th>
-            <th class="px-4 py-2 border-b">Books Borrowed</th>
-            <th class="px-4 py-2 border-b">Books Returned</th>
-            <th class="px-4 py-2 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @members.each do |member| %>
-            <tr id="member_<%= member.id %>">
-              <td class="px-4 py-2 border-b"><%= member.name %></td>
-              <td class="px-4 py-2 border-b"><%= member.email %></td>
-              <td class="px-4 py-2 border-b"><%= member.birth_date %></td>
-              <td class="px-4 py-2 border-b"><%= member.gender %></td>
-              <td class="px-4 py-2 border-b"><%= member.is_active ? "Yes" : "No" %></td>
-              <td class="px-4 py-2 border-b"><%= member.is_vip ? "Yes" : "No" %></td>
-              <td class="px-4 py-2 border-b"><%= member.is_admin ? "Yes" : "No" %></td>
-              <td class="px-4 py-2 border-b"><%= member.balance %></td>
-              <td class="px-4 py-2 border-b"><%= member.total_spent %></td>
-              <td class="px-4 py-2 border-b"><%= member.discount_rate %></td>
-              <td class="px-4 py-2 border-b"><%= member.points %></td>
-              <td class="px-4 py-2 border-b"><%= member.books_borrowed %></td>
-              <td class="px-4 py-2 border-b"><%= member.books_returned %></td>
-              <td class="px-4 py-2 border-b">
-                <%= link_to "Show", member, class: "text-blue-500 hover:underline mr-2" %>
-                <%= link_to "Edit", edit_member_path(member), class: "text-green-500 hover:underline mr-2" %>
-                <%= link_to "Delete", member_path(member), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-
-      <% if @pagy && @pagy.pages > 1 %>
-        <div class="mt-6 flex justify-center">
-          <%== @pagy.series_nav %>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-gray-500">No members yet. <%= link_to "Create one", new_member_path, class: "text-blue-500 hover:underline" %>!</p>
-    <% end %>
-  </div>
-</div>
+<%= render "shared/index_page",
+    title: "Members",
+    new_path: new_member_path,
+    new_text: "New Member",
+    filter_fields: { name: "text", email: "text", gender: "select", is_active: "boolean", is_vip: "boolean" },
+    filter_options: { gender: Member.genders.keys },
+    table_container_id: "members-table-container",
+    table_partial: "members_table" %>

@@ -5,7 +5,11 @@ Rails.application.routes.draw do
       get :delete_confirmation
     end
   end
-  resources :members
+  resources :members do
+    member do
+      get :delete_confirmation
+    end
+  end
   resources :authors do
     member do
       get :delete_confirmation

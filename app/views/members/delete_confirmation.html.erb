@@ -1,0 +1,9 @@
+<%= render "shared/delete_confirmation",
+    resource: @member,
+    resource_name: "Member",
+    resource_path: member_path(@member),
+    index_path: members_path,
+    display_attribute: :name,
+    table_container_id: "members-table-container",
+    table_partial: "members/members_table" %>
+

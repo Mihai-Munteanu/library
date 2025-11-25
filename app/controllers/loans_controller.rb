@@ -59,6 +59,7 @@ class LoansController < ApplicationController
     redirect_to = params[:redirect_to]
     from_page = params[:from_page]
     @book = @loan.book if from_page == "book_show"
+    @member = @loan.member if from_page == "member_show"
 
     @loan.destroy!
 
@@ -68,6 +69,13 @@ class LoansController < ApplicationController
         if from_page == "book_show" && @book.present?
           # From book show page: reload the book's loans
           @loans = @book.loans
+          @loans = apply_sorting(@loans, { created_at: :desc })
+          @pagy, @loans = pagy(:offset, @loans, items: 10)
+
+          render :destroy
+        elsif from_page == "member_show" && @member.present?
+          # From member show page: reload the member's loans
+          @loans = @member.loans
           @loans = apply_sorting(@loans, { created_at: :desc })
           @pagy, @loans = pagy(:offset, @loans, items: 10)
 

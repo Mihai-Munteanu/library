@@ -1,2 +1,28 @@
-<%= turbo_stream.remove "member_#{@member.id}" %>
-
+<%
+  redirect_to = params[:redirect_to]
+  from_page = params[:from_page]
+%>
+<% if from_page == "index" && @members.present? %>
+  <%# From index page: update the members table with refreshed data %>
+  <%= turbo_stream.update "members-table-container" do %>
+    <%= render "members_table" %>
+  <% end %>
+  <%= turbo_stream.update "modal", "" %>
+<% elsif from_page == "show" && redirect_to.present? %>
+  <%# From show page: redirect to index %>
+  <%= turbo_stream.update "modal", "" %>
+  <%= turbo_stream.append "body" do %>
+    <script>
+      window.location.href = '<%= j(redirect_to) %>';
+    </script>
+  <% end %>
+<% else %>
+  <%# Fallback: remove row and redirect %>
+  <%= turbo_stream.remove dom_id(@member) %>
+  <%= turbo_stream.update "modal", "" %>
+  <%= turbo_stream.append "body" do %>
+    <script>
+      window.location.href = '<%= j(redirect_to || members_path) %>';
+    </script>
+  <% end %>
+<% end %>

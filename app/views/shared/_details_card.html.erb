@@ -11,7 +11,13 @@
       <div class="<%= field[:col_span] || 'sm:col-span-1' %>">
         <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1"><%= field[:label] %></dt>
         <dd class="<%= field[:value_class] || 'text-base sm:text-lg text-gray-900' %>">
-          <%= field[:value].html_safe %>
+          <%
+            value = field[:value]
+            # If value responds to html_safe, it's already HTML-safe (from helpers like link_to, simple_format, etc.)
+            # Otherwise, convert to string
+            display_value = value.respond_to?(:html_safe) ? value.html_safe : value.to_s
+          %>
+          <%= display_value %>
         </dd>
       </div>
     <% end %>
