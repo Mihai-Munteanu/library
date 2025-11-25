@@ -10,10 +10,12 @@ class Book < ApplicationRecord
     on_loan: 1
   }
 
+  before_validation :trim_isbn
+
   validates :title, presence: true
   validates :title, length: { minimum: 3 }, allow_blank: true
   validates :isbn, presence: true
-  validates :isbn, length: { minimum: 10 }, allow_blank: true
+  validates :isbn, length: { minimum: 10 }, allow_blank: true, uniqueness: true
   validates :description, length: { maximum: 1000 }, allow_blank: true
   validates :publication_date, presence: true
   validates :publication_date, comparison: { less_than: Date.today }, allow_blank: true
@@ -40,5 +42,11 @@ class Book < ApplicationRecord
     else
       update_column(:status, :available) unless status == "available"
     end
+  end
+
+  private
+
+  def trim_isbn
+    self.isbn = isbn&.strip
   end
 end

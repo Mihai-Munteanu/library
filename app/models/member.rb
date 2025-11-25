@@ -7,6 +7,8 @@ class Member < ApplicationRecord
 
   has_many :loans, dependent: :destroy
 
+  before_validation :trim_email
+
   validates :name, presence: true
   validates :name, length: { minimum: 3 }, allow_blank: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
@@ -27,4 +29,10 @@ class Member < ApplicationRecord
   validates :points, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
   validates :books_borrowed, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
   validates :books_returned, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
+
+  private
+
+  def trim_email
+    self.email = email&.strip&.downcase
+  end
 end
