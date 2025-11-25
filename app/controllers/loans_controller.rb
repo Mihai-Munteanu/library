@@ -18,6 +18,8 @@ class LoansController < ApplicationController
     @loan.due_date = Date.today + 14.days
     # Preselect book if book_id parameter is provided (e.g., from book show page)
     @loan.book_id = params[:book_id] if params[:book_id].present?
+    # Preselect member if member_id parameter is provided (e.g., from member show page)
+    @loan.member_id = params[:member_id] if params[:member_id].present?
   end
 
   # GET /loans/1/edit

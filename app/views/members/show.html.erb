@@ -31,6 +31,8 @@
     related_sections: [
       {
         title: "Loans for #{@member.name}",
+        new_path: new_loan_path(member_id: @member.id),
+        new_text: "Add Loan",
         container_id: "loans-table-container",
         partial: "members/loans_table",
         locals: { loans: @loans, pagy: @pagy, member: @member, from_page: "member_show", return_to: member_path(@member) }

@@ -31,8 +31,9 @@
         <%= form.label :title, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Title <span class="text-red-500">*</span>
         <% end %>
+        <% title_has_error = book.errors[:title].any? || (book.errors.any? && book.title.blank?) %>
         <%= form.text_field :title,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors #{'border-red-500' if book.errors[:title].any?}" %>
+            class: "w-full px-3 py-2 border #{title_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
         <% if book.errors[:title].any? %>
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:title].first %></p>
         <% end %>
@@ -42,8 +43,9 @@
         <%= form.label :isbn, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           ISBN <span class="text-red-500">*</span>
         <% end %>
+        <% isbn_has_error = book.errors[:isbn].any? || (book.errors.any? && book.isbn.blank?) %>
         <%= form.text_field :isbn,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors #{'border-red-500' if book.errors[:isbn].any?}" %>
+            class: "w-full px-3 py-2 border #{isbn_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
         <% if book.errors[:isbn].any? %>
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:isbn].first %></p>
         <% end %>
@@ -53,10 +55,11 @@
         <%= form.label :author_id, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Author <span class="text-red-500">*</span>
         <% end %>
+        <% author_id_has_error = book.errors[:author_id].any? || (book.errors.any? && book.author_id.blank?) %>
         <%= form.select :author_id,
             Author.all.map { |a| [a.name, a.id] },
             { prompt: "Select author", selected: book.author_id },
-            { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white #{'border-red-500' if book.errors[:author_id].any?}" } %>
+            { class: "w-full px-3 py-2 border #{author_id_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" } %>
         <% if book.errors[:author_id].any? %>
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:author_id].first %></p>
         <% end %>
@@ -66,8 +69,9 @@
         <%= form.label :publication_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Publication Date <span class="text-red-500">*</span>
         <% end %>
+        <% publication_date_has_error = book.errors[:publication_date].any? || (book.errors.any? && book.publication_date.blank?) %>
         <%= form.date_field :publication_date,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors #{'border-red-500' if book.errors[:publication_date].any?}" %>
+            class: "w-full px-3 py-2 border #{publication_date_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
         <% if book.errors[:publication_date].any? %>
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:publication_date].first %></p>
         <% end %>
@@ -75,10 +79,11 @@
 
       <div>
         <%= form.label :copies_sold, class: "block text-sm font-medium text-gray-700 mb-2" do %>
-          Copies Sold <span class="text-red-500">*</span>
+          Copies Sold
         <% end %>
+        <% copies_sold_has_error = book.errors[:copies_sold].any? || (book.errors.any? && book.copies_sold.blank?) %>
         <%= form.number_field :copies_sold,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors #{'border-red-500' if book.errors[:copies_sold].any?}" %>
+            class: "w-full px-3 py-2 border #{copies_sold_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
         <% if book.errors[:copies_sold].any? %>
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:copies_sold].first %></p>
         <% end %>
@@ -88,8 +93,9 @@
         <%= form.label :price, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Price <span class="text-red-500">*</span>
         <% end %>
+        <% price_has_error = book.errors[:price].any? || (book.errors.any? && book.price.blank?) %>
         <%= form.number_field :price, step: 0.01,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors #{'border-red-500' if book.errors[:price].any?}" %>
+            class: "w-full px-3 py-2 border #{price_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
         <% if book.errors[:price].any? %>
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:price].first %></p>
         <% end %>

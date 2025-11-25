@@ -1,9 +1,9 @@
 <%= form_with(model: member, class: "contents") do |form| %>
   <% if member.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3 mb-4">
       <h2><%= pluralize(member.errors.count, "error") %> prohibited this member from being saved:</h2>
 
-      <ul class="list-disc ml-6">
+      <ul class="list-disc ml-6 mt-2">
         <% member.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,68 +11,148 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:name].none?, "border-red-400 focus:outline-red-600": member.errors[:name].any?}] %>
+  <!-- Basic Information Section -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Basic Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div>
+        <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Name <span class="text-red-500">*</span>
+        <% end %>
+        <% name_has_error = member.errors[:name].any? || (member.errors.any? && member.name.blank?) %>
+        <%= form.text_field :name,
+            class: "w-full px-3 py-2 border #{name_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:name].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:name].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :email, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Email <span class="text-red-500">*</span>
+        <% end %>
+        <% email_has_error = member.errors[:email].any? || (member.errors.any? && member.email.blank?) %>
+        <%= form.text_field :email,
+            class: "w-full px-3 py-2 border #{email_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:email].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:email].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :birth_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Birth Date <span class="text-red-500">*</span>
+        <% end %>
+        <% birth_date_has_error = member.errors[:birth_date].any? || (member.errors.any? && member.birth_date.blank?) %>
+        <%= form.date_field :birth_date,
+            class: "w-full px-3 py-2 border #{birth_date_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:birth_date].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:birth_date].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :gender, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Gender <span class="text-red-500">*</span>
+        <% end %>
+        <% gender_has_error = member.errors[:gender].any? || (member.errors.any? && member.gender.blank?) %>
+        <%= form.select :gender,
+            Member.genders.keys.map { |g| [g.humanize, g] },
+            { prompt: "Select gender" },
+            { class: "w-full px-3 py-2 border #{gender_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" } %>
+        <% if member.errors[:gender].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:gender].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :balance, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Balance <span class="text-red-500">*</span>
+        <% end %>
+        <% balance_has_error = member.errors[:balance].any? || (member.errors.any? && member.balance.blank?) %>
+        <%= form.number_field :balance, step: 0.01,
+            class: "w-full px-3 py-2 border #{balance_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:balance].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:balance].first %></p>
+        <% end %>
+      </div>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :email %>
-    <%= form.text_field :email, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:email].none?, "border-red-400 focus:outline-red-600": member.errors[:email].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :birth_date %>
-    <%= form.date_field :birth_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:birth_date].none?, "border-red-400 focus:outline-red-600": member.errors[:birth_date].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :gender %>
-    <%= form.select :gender, Member.genders.keys, { prompt: "Select gender" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:gender].none?, "border-red-400 focus:outline-red-600": member.errors[:gender].any?}] %>
-  </div>
-  <div class="flex space-x-4 gap-2">
-    <div class="my-5">
-      <%= form.label :is_active, class: "inline-flex items-center" do %>
-        <%= form.check_box :is_active, class: "mr-2" %>
-        Is Active
-      <% end %>
+  <!-- Additional Information Section -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Additional Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center">
+          <%= form.check_box :is_active, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+          <%= form.label :is_active, "Is Active", class: "ml-2 block text-sm font-medium text-gray-700" %>
+        </div>
+        <div class="flex items-center">
+          <%= form.check_box :is_vip, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+          <%= form.label :is_vip, "Is VIP", class: "ml-2 block text-sm font-medium text-gray-700" %>
+        </div>
+        <div class="flex items-center">
+          <%= form.check_box :is_admin, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+          <%= form.label :is_admin, "Is Admin", class: "ml-2 block text-sm font-medium text-gray-700" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :total_spent, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.number_field :total_spent, step: 0.01,
+            class: "w-full px-3 py-2 border #{member.errors[:total_spent].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:total_spent].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:total_spent].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :discount_rate, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.number_field :discount_rate, step: 0.01,
+            class: "w-full px-3 py-2 border #{member.errors[:discount_rate].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:discount_rate].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:discount_rate].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :points, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.number_field :points, step: 0.01,
+            class: "w-full px-3 py-2 border #{member.errors[:points].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:points].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:points].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :books_borrowed, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.number_field :books_borrowed, step: 0.01,
+            class: "w-full px-3 py-2 border #{member.errors[:books_borrowed].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:books_borrowed].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:books_borrowed].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.label :books_returned, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.number_field :books_returned, step: 0.01,
+            class: "w-full px-3 py-2 border #{member.errors[:books_returned].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if member.errors[:books_returned].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= member.errors[:books_returned].first %></p>
+        <% end %>
+      </div>
     </div>
-    <div class="my-5">
-        <%= form.label :is_vip, class: "inline-flex items-center" do %>
-        <%= form.check_box :is_vip, class: "mr-2" %>
-        Is VIP
-      <% end %>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
+    <p class="text-sm text-gray-500">
+      <span class="text-red-500">*</span> Required fields
+    </p>
+    <div class="flex gap-3 w-full sm:w-auto">
+      <%= back_button_with_fallback(members_path, text: "Cancel", class: "w-full sm:w-auto") %>
+      <%= form.submit class: "w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition-colors shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
     </div>
-    <div class="my-5">
-      <%= form.label :is_admin, class: "inline-flex items-center" do %>
-        <%= form.check_box :is_admin, class: "mr-2" %>
-        Is Admin
-      <% end %>
-    </div>
-  </div>
-  <div class="my-5">
-    <%= form.label :balance %>
-    <%= form.number_field :balance, step: 0.01, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:balance].none?, "border-red-400 focus:outline-red-600": member.errors[:balance].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :total_spent %>
-    <%= form.number_field :total_spent, step: 0.01, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:total_spent].none?, "border-red-400 focus:outline-red-600": member.errors[:total_spent].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :discount_rate %>
-    <%= form.number_field :discount_rate, step: 0.01, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:discount_rate].none?, "border-red-400 focus:outline-red-600": member.errors[:discount_rate].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :points %>
-    <%= form.number_field :points, step: 0.01, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:points].none?, "border-red-400 focus:outline-red-600": member.errors[:points].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :books_borrowed %>
-    <%= form.number_field :books_borrowed, step: 0.01, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:books_borrowed].none?, "border-red-400 focus:outline-red-600": member.errors[:books_borrowed].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :books_returned %>
-    <%= form.number_field :books_returned, step: 0.01, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": member.errors[:books_returned].none?, "border-red-400 focus:outline-red-600": member.errors[:books_returned].any?}] %>
-  </div>
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>

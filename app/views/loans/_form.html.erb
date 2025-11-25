@@ -15,10 +15,11 @@
     <%= form.label :member_id, class: "block text-sm font-medium text-gray-700 mb-2" do %>
       Member <span class="text-red-500">*</span>
     <% end %>
+    <% member_id_has_error = loan.errors[:member_id].any? || (loan.errors.any? && loan.member_id.blank?) %>
     <%= form.select :member_id,
         Member.all.map { |m| [m.name, m.id] },
-        { prompt: "Select a member" },
-        class: "w-full px-3 py-2 border #{loan.errors[:member_id].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        { prompt: "Select a member", selected: loan.member_id },
+        class: "w-full px-3 py-2 border #{member_id_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" %>
     <% if loan.errors[:member_id].any? %>
       <p class="mt-1 text-sm text-red-600"><%= loan.errors[:member_id].first %></p>
     <% end %>
@@ -40,10 +41,11 @@
       end
       book_options = available_books.map { |b| [b.title, b.id] }
     %>
+    <% book_id_has_error = loan.errors[:book_id].any? || (loan.errors.any? && loan.book_id.blank?) %>
     <%= form.select :book_id,
         book_options,
-        { prompt: "Select an available book" },
-        class: "w-full px-3 py-2 border #{loan.errors[:book_id].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        { prompt: "Select an available book", selected: loan.book_id },
+        class: "w-full px-3 py-2 border #{book_id_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" %>
     <% if loan.errors[:book_id].any? %>
       <p class="mt-1 text-sm text-red-600"><%= loan.errors[:book_id].first %></p>
     <% end %>
@@ -53,9 +55,10 @@
     <%= form.label :start_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
       Start Date <span class="text-red-500">*</span>
     <% end %>
+    <% start_date_has_error = loan.errors[:start_date].any? || (loan.errors.any? && loan.start_date.blank?) %>
     <%= form.date_field :start_date,
         id: "loan_start_date",
-        class: "w-full px-3 py-2 border #{loan.errors[:start_date].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        class: "w-full px-3 py-2 border #{start_date_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
     <% if loan.errors[:start_date].any? %>
       <p class="mt-1 text-sm text-red-600"><%= loan.errors[:start_date].first %></p>
     <% end %>
@@ -65,9 +68,10 @@
     <%= form.label :due_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
       Due Date <span class="text-red-500">*</span>
     <% end %>
+    <% due_date_has_error = loan.errors[:due_date].any? || (loan.errors.any? && loan.due_date.blank?) %>
     <%= form.date_field :due_date,
         id: "loan_due_date",
-        class: "w-full px-3 py-2 border #{loan.errors[:due_date].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        class: "w-full px-3 py-2 border #{due_date_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
     <% if loan.errors[:due_date].any? %>
       <p class="mt-1 text-sm text-red-600"><%= loan.errors[:due_date].first %></p>
     <% end %>
