@@ -3,10 +3,7 @@ class LoansController < ApplicationController
 
   # GET /loans or /loans.json
   def index
-    @loans = Loan.includes(:member, :book).all
-    @loans = apply_filters(@loans, [:member_id, :book_id, :status])
-    @loans = apply_sorting(@loans, { created_at: :desc })
-    @pagy, @loans = pagy(:offset, @loans, items: 10)
+    load_loans
   end
 
   # GET /loans/1 or /loans/1.json
@@ -80,6 +77,11 @@ class LoansController < ApplicationController
           @pagy, @loans = pagy(:offset, @loans, items: 10)
 
           render :destroy
+        elsif from_page == "index"
+          # From index page: reload loans with same filters/sorting to update the list
+          load_loans
+
+          render :destroy
         else
           # From loans index or other pages
           render :destroy
@@ -89,6 +91,33 @@ class LoansController < ApplicationController
   end
 
   private
+
+  def load_loans
+    # Get filters and sorting from URL/request parameters
+    source_params = request.query_parameters.present? ? request.query_parameters : params
+
+    # Temporarily merge query params into params so apply_filters and apply_sorting can use them
+    filter_params = source_params.except(:page, :redirect_to, :from_page, :controller, :action, :id, :authenticity_token, :_method)
+    filter_params.each { |k, v| params[k] = v if v.present? }
+
+    # Build current URL with filters/sorting for use in views
+    filter_hash = filter_params.is_a?(ActionController::Parameters) ? filter_params.to_unsafe_h : filter_params.to_h
+    filter_hash = filter_hash.compact
+
+    if filter_hash.any?
+      base_url = loans_path
+      query_string = filter_hash.to_query
+      @current_index_url = "#{base_url}?#{query_string}"
+    else
+      @current_index_url = loans_path
+    end
+
+    @loans = Loan.includes(:member, :book).all
+    @loans = apply_filters(@loans, [:member_id, :book_id, :status])
+    @loans = apply_sorting(@loans, { created_at: :desc })
+    @pagy, @loans = pagy(:offset, @loans, items: 10)
+  end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_loan
       @loan = Loan.find(params.expect(:id))

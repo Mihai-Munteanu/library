@@ -1,71 +1,33 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold"><%= @loan.member.name %> - <%= @loan.book.title %></h1>
-    <div>
-      <%= link_to "Edit", edit_loan_path(@loan), class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" %>
-      <%= link_to "Back to Loans", loans_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
-    </div>
-  </div>
-
-  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <dl class="grid grid-cols-2 gap-4">
-      <div>
-        <dt class="font-bold text-gray-700">Member:</dt>
-        <dd class="text-gray-900"><%= @loan.member.name %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Book:</dt>
-        <dd class="text-gray-900"><%= @loan.book.title %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Start Date:</dt>
-        <dd class="text-gray-900"><%= @loan.start_date %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Due Date:</dt>
-        <dd class="text-gray-900"><%= @loan.due_date %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Return Date:</dt>
-        <dd class="text-gray-900"><%= @loan.return_date %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Status:</dt>
-        <dd class="text-gray-900"><%= @loan.status %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Notes:</dt>
-        <dd class="text-gray-900"><%= @loan.notes %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Metadata:</dt>
-        <dd class="text-gray-900"><%= @loan.metadata %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Paused Start Time:</dt>
-        <dd class="text-gray-900"><%= @loan.paused_start_time %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Paused End Time:</dt>
-        <dd class="text-gray-900"><%= @loan.paused_end_time %></dd>
-      </div>
-      <div>
-        <dt class="font-bold text-gray-700">Member:</dt>
-        <dd class="text-gray-900"><%= link_to @loan.member.name, member_path(@loan.member), class: "text-blue-500 hover:underline" %></dd>
-      </div>
-      <div>
-        <dt class="font-bold text-gray-700">Book:</dt>
-        <dd class="text-gray-900"><%= link_to @loan.book.title, book_path(@loan.book), class: "text-blue-500 hover:underline" %></dd>
-      </div>
-    </dl>
-  </div>
-</div>
+<%
+  # Prepare basic information fields
+  basic_fields = [
+    {
+      label: "Member",
+      value: link_to(@loan.member.name, member_path(@loan.member), class: "text-blue-600 hover:text-blue-800 hover:underline")
+    },
+    {
+      label: "Book",
+      value: link_to(@loan.book.title, book_path(@loan.book), class: "text-blue-600 hover:text-blue-800 hover:underline")
+    },
+    { label: "Start Date", value: @loan.start_date || "N/A" },
+    { label: "Due Date", value: @loan.due_date || "N/A" },
+    { label: "Return Date", value: @loan.return_date || "N/A" },
+    { label: "Status", value: @loan.status || "N/A" },
+    { label: "Notes", value: @loan.notes || "N/A", col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900 leading-relaxed" },
+    { label: "Metadata", value: @loan.metadata || "N/A", col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900" },
+    { label: "Paused Start Time", value: @loan.paused_start_time || "N/A" },
+    { label: "Paused End Time", value: @loan.paused_end_time || "N/A" }
+  ]
+%>
+<%= render "shared/show_page",
+    resource: @loan,
+    title: "#{@loan.member.name} - #{@loan.book.title}",
+    index_path: loans_path,
+    edit_path: edit_loan_path(@loan),
+    delete_confirmation_path: delete_confirmation_loan_path(@loan, from_page: "show"),
+    details_sections: [
+      {
+        title: "Basic Information",
+        fields: basic_fields
+      }
+    ] %>

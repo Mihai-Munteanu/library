@@ -14,6 +14,12 @@
     <%= render partial: "members/loans_table", locals: { loans: @loans, pagy: @pagy, member: @member, from_page: "member_show", return_to: redirect_to } %>
   <% end %>
   <%= turbo_stream.update "modal", "" %>
+<% elsif from_page == "index" && @loans.present? %>
+  <%# From index page: update the loans table with refreshed data %>
+  <%= turbo_stream.update "loans-table-container" do %>
+    <%= render "loans_table" %>
+  <% end %>
+  <%= turbo_stream.update "modal", "" %>
 <% else %>
   <%# From loans index or other pages: remove the row %>
   <%= turbo_stream.remove dom_id(@loan) %>
