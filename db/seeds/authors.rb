@@ -27,11 +27,34 @@ module Seeds
 
         # Generate gender
         gender = Author.genders.values.sample
+
+        # Generate valid Twitter username (only alphanumeric and underscore, 1-15 chars)
+        # Twitter usernames can only contain letters, numbers, and underscores
+        twitter_base = Faker::Internet.username.gsub(/[^A-Za-z0-9_]/, '').downcase
+        twitter_base = "user#{rand(1000..9999)}" if twitter_base.blank?
+        twitter_base = twitter_base[0..14] # Ensure max 15 chars
+        # Randomly choose format: @username, https://twitter.com/username, or https://x.com/username
+        twitter_format = rand(3)
+        twitter = case twitter_format
+        when 0
+          "@#{twitter_base}"
+        when 1
+          "https://twitter.com/#{twitter_base}"
+        else
+          "https://x.com/#{twitter_base}"
+        end
+
+        # Generate valid Facebook URL (must be facebook.com or fb.com URL)
+        facebook_base = Faker::Internet.username.gsub(/[^A-Za-z0-9_.]/, '').downcase
+        facebook_base = "user#{rand(1000..9999)}" if facebook_base.blank?
+        # Randomly choose facebook.com or fb.com
+        facebook = rand < 0.5 ? "https://facebook.com/#{facebook_base}" : "https://fb.com/#{facebook_base}"
+
         metadata = {
           website: Faker::Internet.url,
           email: Faker::Internet.email,
-          twitter: Faker::Internet.username,
-          facebook: Faker::Internet.username,
+          twitter: twitter,
+          facebook: facebook,
           tags: Faker::Lorem.words(number: rand(1..5)),
           notes: Faker::Lorem.paragraph(sentence_count: 2..5)
         }
