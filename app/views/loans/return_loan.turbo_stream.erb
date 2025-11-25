@@ -1,0 +1,23 @@
+<%
+  from_page = params[:from_page]
+%>
+<% if from_page == "book_show" && @loans.present? %>
+  <%# From book show page: update the loans table with refreshed data %>
+  <%= turbo_stream.update "loans-table-container" do %>
+    <%= render partial: "books/loans_table", locals: { loans: @loans, pagy: @pagy, book: @book, from_page: "book_show", return_to: book_path(@book) } %>
+  <% end %>
+<% elsif from_page == "member_show" && @loans.present? %>
+  <%# From member show page: update the loans table with refreshed data %>
+  <%= turbo_stream.update "loans-table-container" do %>
+    <%= render partial: "members/loans_table", locals: { loans: @loans, pagy: @pagy, member: @member, from_page: "member_show", return_to: member_path(@member) } %>
+  <% end %>
+<% elsif from_page == "index" && @loans.present? %>
+  <%# From index page: update the loans table with refreshed data %>
+  <%= turbo_stream.update "loans-table-container" do %>
+    <%= render "loans_table" %>
+  <% end %>
+<% elsif from_page == "show" %>
+  <%# From loan show page: redirect to show the updated loan %>
+  <%= turbo_stream.redirect_to loan_path(@loan) %>
+<% end %>
+

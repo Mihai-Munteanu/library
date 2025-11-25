@@ -38,6 +38,19 @@
     fields: metadata_fields,
     grid_cols: "grid-cols-1 sm:grid-cols-2"
   } if metadata_fields.any?
+
+  # Prepare custom actions for header
+  custom_actions = []
+  if @loan.borrowed? || @loan.overdue?
+    custom_actions << {
+      type: :button,
+      path: return_loan_loan_path(@loan, from_page: "show"),
+      text: "Return Loan",
+      class: "bg-purple-500 hover:bg-purple-700",
+      method: :patch,
+      turbo: true
+    }
+  end
 %>
 <%= render "shared/show_page",
     resource: @loan,
@@ -45,4 +58,5 @@
     index_path: loans_path,
     edit_path: edit_loan_path(@loan),
     delete_confirmation_path: delete_confirmation_loan_path(@loan, from_page: "show"),
-    details_sections: details_sections %>
+    details_sections: details_sections,
+    actions: custom_actions %>

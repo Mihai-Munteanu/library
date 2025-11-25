@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :loans do
     member do
       get :delete_confirmation
+      patch :return_loan
     end
   end
   resources :members do

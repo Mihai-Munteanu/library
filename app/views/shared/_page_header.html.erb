@@ -8,7 +8,8 @@
   show_path = local_assigns[:show_path]
   delete_confirmation_path = local_assigns[:delete_confirmation_path]
   from_page = local_assigns.fetch(:from_page, "show")
-  actions = local_assigns.fetch(:actions, [])
+  actions = local_assigns[:actions] || []
+  actions = [] unless actions.is_a?(Array)
 
   # Default actions based on what's provided
   default_actions = []
@@ -17,8 +18,8 @@
   default_actions << { type: :back, path: index_path, text: "Back", class: "bg-gray-500 hover:bg-gray-700" } if index_path
   default_actions << { type: :delete, path: delete_confirmation_path, text: "Delete", class: "bg-red-500 hover:bg-red-700", modal: true } if delete_confirmation_path
 
-  # Merge default actions with custom actions
-  all_actions = actions.any? ? actions : default_actions
+  # Merge default actions with custom actions (custom actions come first, then defaults)
+  all_actions = actions.any? ? (actions + default_actions) : default_actions
 %>
 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
   <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900"><%= title %></h1>
@@ -29,6 +30,11 @@
           <%= back_button_with_fallback(action[:path], text: action[:text], class: "#{action[:class]} text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg") %>
         <% elsif action[:type] == :delete && action[:modal] %>
           <%= modal_link_to action[:text], action[:path], class: "#{action[:class]} text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
+        <% elsif action[:type] == :button %>
+          <%= button_to action[:text], action[:path],
+              method: action[:method] || :post,
+              data: { turbo: action[:turbo] },
+              class: "#{action[:class]} text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
         <% else %>
           <%= link_to action[:text], action[:path], class: "#{action[:class]} text-white font-medium py-2 px-4 rounded text-center transition-colors #{'shadow-md hover:shadow-lg' if action[:type] != :show}" %>
         <% end %>

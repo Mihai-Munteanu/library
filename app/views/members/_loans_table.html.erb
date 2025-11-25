@@ -37,11 +37,22 @@
                 <div class="text-sm text-gray-900"><%= loan.status || "N/A" %></div>
               </td>
               <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex justify-end gap-2">
+                <div class="flex justify-end gap-2 flex-wrap">
                   <%= link_to "Show", loan_path(loan),
                       class: "text-blue-600 hover:text-blue-900 hover:underline transition-colors" %>
                   <%= link_to "Edit", edit_loan_path(loan),
                       class: "text-green-600 hover:text-green-900 hover:underline transition-colors" %>
+                  <% if loan.borrowed? || loan.overdue? %>
+                    <%
+                      from_page = local_assigns[:from_page] || "member_show"
+                      member = local_assigns[:member] || @member
+                    %>
+                    <%= button_to "Return",
+                        return_loan_loan_path(loan, from_page: from_page),
+                        method: :patch,
+                        data: { turbo: true },
+                        class: "text-purple-600 hover:text-purple-900 hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer" %>
+                  <% end %>
                   <%
                     # Determine context: if we're on member show page
                     from_page = local_assigns[:from_page] || "member_show"

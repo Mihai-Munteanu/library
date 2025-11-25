@@ -13,7 +13,7 @@ class Loan < ApplicationRecord
   after_destroy :update_book_status
 
   validates :start_date, presence: true
-  validates :start_date, comparison: { greater_than_or_equal_to: Date.today }, allow_blank: true
+  validates :start_date, comparison: { greater_than_or_equal_to: Date.today }, allow_blank: true, on: :create
   validates :due_date, presence: true
   validates :due_date, comparison: { greater_than: :start_date }, allow_blank: true
   validates :return_date, comparison: { greater_than: :start_date }, allow_blank: true

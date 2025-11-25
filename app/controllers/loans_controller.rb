@@ -1,5 +1,5 @@
 class LoansController < ApplicationController
-  before_action :set_loan, only: %i[ show edit update destroy delete_confirmation ]
+  before_action :set_loan, only: %i[ show edit update destroy delete_confirmation return_loan ]
 
   # GET /loans or /loans.json
   def index
@@ -56,6 +56,51 @@ class LoansController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @loan.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH /loans/1/return_loan
+  def return_loan
+    from_page = params[:from_page]
+    @book = @loan.book if from_page == "book_show"
+    @member = @loan.member if from_page == "member_show"
+
+    # Update loan to returned status and set return date to today
+    @loan.status = :returned
+    @loan.return_date = Date.today
+
+    respond_to do |format|
+      if @loan.save
+        format.html { redirect_to @loan, notice: "Loan was successfully returned.", status: :see_other }
+        format.turbo_stream do
+          if from_page == "book_show" && @book.present?
+            # From book show page: reload the book's loans
+            @loans = @book.loans
+            @loans = apply_sorting(@loans, { created_at: :desc })
+            @pagy, @loans = pagy(:offset, @loans, items: 10)
+
+            render :return_loan
+          elsif from_page == "member_show" && @member.present?
+            # From member show page: reload the member's loans
+            @loans = @member.loans
+            @loans = apply_sorting(@loans, { created_at: :desc })
+            @pagy, @loans = pagy(:offset, @loans, items: 10)
+
+            render :return_loan
+          elsif from_page == "index"
+            # From index page: reload loans with same filters/sorting to update the list
+            load_loans
+
+            render :return_loan
+          else
+            # From loan show page or other pages
+            render :return_loan
+          end
+        end
+      else
+        format.html { redirect_to @loan, alert: "Failed to return loan.", status: :unprocessable_entity }
+        format.turbo_stream { render :return_loan_error }
       end
     end
   end
@@ -121,7 +166,7 @@ class LoansController < ApplicationController
       @current_index_url = loans_path
     end
 
-    @loans = Loan.includes(:member, :book).all
+    @loans = Loan.includes(:member, :book).all.order(created_at: :desc)
     @loans = apply_filters(@loans, [ :member_id, :book_id, :status ])
     @loans = apply_sorting(@loans, { created_at: :desc })
     @pagy, @loans = pagy(:offset, @loans, items: 10)
