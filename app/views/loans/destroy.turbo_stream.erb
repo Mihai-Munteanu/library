@@ -1,1 +1,15 @@
-<%= turbo_stream.remove "loan_#{@loan.id}" %>
+<%
+  redirect_to = params[:redirect_to]
+  from_page = params[:from_page]
+%>
+<% if from_page == "book_show" && @loans.present? %>
+  <%# From book show page: update the loans table with refreshed data %>
+  <%= turbo_stream.update "loans-table-container" do %>
+    <%= render partial: "books/loans_table", locals: { loans: @loans, pagy: @pagy, book: @book, from_page: "book_show", return_to: redirect_to } %>
+  <% end %>
+  <%= turbo_stream.update "modal", "" %>
+<% else %>
+  <%# From loans index or other pages: remove the row %>
+  <%= turbo_stream.remove dom_id(@loan) %>
+  <%= turbo_stream.update "modal", "" %>
+<% end %>

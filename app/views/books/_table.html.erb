@@ -81,8 +81,22 @@
                     <%= link_to "Edit", edit_book_path(book),
                         data: { turbo_frame: "_top" },
                         class: "text-green-600 hover:text-green-800 hover:underline" %>
-                    <%= link_to "Delete", book_path(book),
-                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?", turbo_frame: "_top" },
+                    <%
+                      # Determine context: if we're in authors show page (inside books_table turbo_frame)
+                      # or if from_page is explicitly set
+                      from_page = local_assigns[:from_page] || (request.headers["Turbo-Frame"] == "books_table" ? "author_show" : "index")
+                      return_to_url = local_assigns[:return_to] || request.referer
+
+                      if from_page == "author_show"
+                        # When deleting from author show page, we want to stay on that page and refresh the books table
+                        delete_url = delete_confirmation_book_path(book) + "?from_page=author_show&return_to=#{CGI.escape(return_to_url)}"
+                      else
+                        # When deleting from books index or other pages
+                        delete_url = delete_confirmation_book_path(book) + "?from_page=index&return_to=#{CGI.escape(books_index_url_with_filters)}"
+                      end
+                    %>
+                    <%= link_to "Delete", delete_url,
+                        data: { turbo_frame: "modal" },
                         class: "text-red-600 hover:text-red-800 hover:underline" %>
                   </div>
                 </td>

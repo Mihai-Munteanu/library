@@ -1,0 +1,31 @@
+<%
+  # Extract configuration from locals
+  title = local_assigns.fetch(:title)
+  new_path = local_assigns[:new_path]
+  new_text = local_assigns.fetch(:new_text, "New #{title.singularize}")
+  filter_fields = local_assigns[:filter_fields]
+  filter_options = local_assigns[:filter_options] || {}
+  table_container_id = local_assigns.fetch(:table_container_id)
+  table_partial = local_assigns.fetch(:table_partial)
+%>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+  <!-- Header Section -->
+  <%= render "shared/page_header",
+      title: title,
+      actions: new_path ? [{ type: :new, path: new_path, text: new_text, class: "bg-blue-500 hover:bg-blue-700" }] : [] %>
+
+  <% if filter_fields %>
+    <!-- Filters Section -->
+    <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 py-4 mb-6">
+      <%= render "shared/filters",
+          filter_fields: filter_fields,
+          options: filter_options %>
+    </div>
+  <% end %>
+
+  <!-- Table Container -->
+  <div id="<%= table_container_id %>">
+    <%= render table_partial %>
+  </div>
+</div>
+

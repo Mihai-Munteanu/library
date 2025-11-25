@@ -30,8 +30,8 @@
     current_index_url = nil
   end
 
-  # Get display value
-  display_value = resource.public_send(display_attribute) if resource.respond_to?(display_attribute)
+  # Get display value - use provided display_value or get from attribute
+  display_value = local_assigns[:display_value] || (resource.respond_to?(display_attribute) ? resource.public_send(display_attribute) : resource.to_s)
 %>
 <%= turbo_frame_tag "modal" do %>
   <%= render "shared/modal", close_url: "#", show_close_button: true do %>

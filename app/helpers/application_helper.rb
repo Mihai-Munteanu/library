@@ -58,4 +58,23 @@ module ApplicationHelper
       authors_path
     end
   end
+
+  # Build books index URL with current filters and sorting
+  # Excludes pagination and internal parameters
+  def books_index_url_with_filters
+    # Use @current_index_url if set by controller, otherwise build from request
+    return @current_index_url if @current_index_url.present?
+
+    # Get filter params from request (exclude internal params)
+    filter_params = request.query_parameters.except(:page, :redirect_to, :from_page, :controller, :action, :id, :authenticity_token, :_method).to_h
+
+    # Build URL with query parameters
+    if filter_params.any?
+      base_url = books_path
+      query_string = filter_params.to_query
+      "#{base_url}?#{query_string}"
+    else
+      books_path
+    end
+  end
 end

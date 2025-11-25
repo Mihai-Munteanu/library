@@ -1,13 +1,21 @@
 Rails.application.routes.draw do
   get "dashboard/index"
-  resources :loans
+  resources :loans do
+    member do
+      get :delete_confirmation
+    end
+  end
   resources :members
   resources :authors do
     member do
       get :delete_confirmation
     end
   end
-  resources :books
+  resources :books do
+    member do
+      get :delete_confirmation
+    end
+  end
 
   root "dashboard#index"
 

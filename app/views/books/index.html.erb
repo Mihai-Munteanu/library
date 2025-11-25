@@ -1,22 +1,8 @@
-<% content_for :title, "Books" %>
-
-<div class="container mx-auto px-4 py-8">
-  <div class="w-full">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-    <% end %>
-  </div>
-
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Books</h1>
-    <%= link_to "New Book", new_book_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-  </div>
-
-  <%= render "shared/filters",
-      filter_fields: { title: "text", isbn: "text", author_id: "select" },
-      options: { author_id: Author.all.map { |a| [a.name, a.id] } } %>
-
-  <%= render "books/table",
-      show_author: true,
-      empty_message: "No books yet. #{link_to 'Create one', new_book_path, class: 'text-blue-500 hover:underline'}!".html_safe %>
-</div>
+<%= render "shared/index_page",
+    title: "Books",
+    new_path: new_book_path,
+    new_text: "New Book",
+    filter_fields: { title: "text", isbn: "text", author_id: "select" },
+    filter_options: { author_id: Author.all.map { |a| [a.name, a.id] } },
+    table_container_id: "books-table-container",
+    table_partial: "books_table" %>

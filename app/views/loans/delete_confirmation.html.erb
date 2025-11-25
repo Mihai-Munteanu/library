@@ -1,0 +1,13 @@
+<%
+  # Create a custom display string for the loan
+  loan_display = "#{@loan.member.name} - #{@loan.book.title}"
+%>
+<%= render "shared/delete_confirmation",
+    resource: @loan,
+    resource_name: "Loan",
+    resource_path: loan_path(@loan),
+    index_path: loans_path,
+    display_value: loan_display,
+    table_container_id: "loans-table-container",
+    table_partial: "loans/loans_table" %>
+

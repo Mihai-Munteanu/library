@@ -1,67 +1,73 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold"><%= @book.title %></h1>
-    <div>
-      <%= link_to "Edit", edit_book_path(@book), class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" %>
-      <%= link_to "Back to Books", books_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" %>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+  <!-- Header Section - Responsive -->
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900"><%= @book.title %></h1>
+    <div class="flex flex-col sm:flex-row gap-2">
+      <%= link_to "Edit", edit_book_path(@book),
+          class: "bg-green-500 hover:bg-green-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
+      <%= back_button_with_fallback(books_path, text: "Back") %>
+      <%= modal_link_to "Delete", delete_confirmation_book_path(@book, from_page: "show"),
+          class: "bg-red-500 hover:bg-red-700 text-white font-medium py-2 px-4 rounded text-center transition-colors shadow-md hover:shadow-lg" %>
     </div>
   </div>
 
-  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <dl class="grid grid-cols-2 gap-4">
-      <div>
-        <dt class="font-bold text-gray-700">Title:</dt>
-        <dd class="text-gray-900"><%= @book.title %></dd>
+  <!-- Book Details Card - Responsive Grid -->
+  <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 lg:px-8 pt-6 pb-8 mb-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Basic Information</h2>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Title</dt>
+        <dd class="text-base sm:text-lg font-medium text-gray-900"><%= @book.title %></dd>
       </div>
 
-      <div>
-        <dt class="font-bold text-gray-700">ISBN:</dt>
-        <dd class="text-gray-900"><%= @book.isbn || "N/A" %></dd>
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">ISBN</dt>
+        <dd class="text-base sm:text-lg text-gray-900"><%= @book.isbn || "N/A" %></dd>
       </div>
 
-      <div>
-        <dt class="font-bold text-gray-700">Description:</dt>
-        <dd class="text-gray-900"><%= @book.description || "N/A" %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Publication Date:</dt>
-        <dd class="text-gray-900"><%= @book.publication_date || "N/A" %></dd>
-      </div>
-
-      <div>
-        <dt class="font-bold text-gray-700">Copies Sold:</dt>
-        <dd class="text-gray-900"><%= @book.copies_sold || "N/A" %></dd>
-      </div>
-
-      <div class="col-span-2">
-        <dt class="font-bold text-gray-700">Price:</dt>
-        <dd class="text-gray-900"><%= @book.price || "N/A" %></dd>
-      </div>
-
-      <div class="col-span-2">
-        <dt class="font-bold text-gray-700">Pages:</dt>
-        <dd class="text-gray-900"><%= @book.pages || "N/A" %></dd>
-      </div>
-
-      <div class="col-span-2">
-        <dt class="font-bold text-gray-700">Author:</dt>
-        <dd class="text-gray-900"><%= link_to @book.author.name || "N/A", author_path(@book.author) %></dd>
-      </div>
-      <div class="col-span-2">
-        <dt class="font-bold text-gray-700">Loans:</dt>
-        <dd class="text-gray-900">
-          <% if @book.loans.present? %>
-            <ul>
-              <% @book.loans.each do |loan| %>
-                <li><%= link_to loan.member.name, loan_path(loan), class: "text-blue-500 hover:underline" %></li>
-              <% end %>
-            </ul>
-          <% else %>
-            No loans recorded.
-          <% end %>
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Author</dt>
+        <dd class="text-base sm:text-lg text-gray-900">
+          <%= link_to @book.author.name, author_path(@book.author), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
         </dd>
-        </div>
+      </div>
+
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Publication Date</dt>
+        <dd class="text-base sm:text-lg text-gray-900"><%= @book.publication_date || "N/A" %></dd>
+      </div>
+
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Copies Sold</dt>
+        <dd class="text-base sm:text-lg text-gray-900"><%= @book.copies_sold || "N/A" %></dd>
+      </div>
+
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Price</dt>
+        <dd class="text-base sm:text-lg text-gray-900">$<%= sprintf("%.2f", @book.price) if @book.price %></dd>
+      </div>
+
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Pages</dt>
+        <dd class="text-base sm:text-lg text-gray-900"><%= @book.pages || "N/A" %></dd>
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-3">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Description</dt>
+        <dd class="text-base text-gray-900 leading-relaxed">
+          <%= @book.description.present? ? simple_format(@book.description) : content_tag(:span, "No description available.", class: "text-gray-400 italic") %>
+        </dd>
+      </div>
     </dl>
+  </div>
+
+  <!-- Loans Section - Responsive Header -->
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Loans for <%= @book.title %></h2>
+  </div>
+
+  <!-- Loans Table Container -->
+  <div id="loans-table-container">
+    <%= render partial: "books/loans_table", locals: { loans: @loans, pagy: @pagy, book: @book, from_page: "book_show", return_to: book_path(@book) } %>
   </div>
 </div>

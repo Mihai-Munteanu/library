@@ -1,0 +1,9 @@
+<%= render "shared/delete_confirmation",
+    resource: @book,
+    resource_name: "Book",
+    resource_path: book_path(@book),
+    index_path: books_path,
+    display_attribute: :title,
+    table_container_id: "books-table-container",
+    table_partial: "books/books_table" %>
+

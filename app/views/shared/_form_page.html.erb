@@ -1,0 +1,22 @@
+<%
+  # Extract configuration from locals
+  title = local_assigns.fetch(:title)
+  resource = local_assigns[:resource]
+  index_path = local_assigns[:index_path]
+  show_path = local_assigns[:show_path]
+  form_partial = local_assigns.fetch(:form_partial)
+  form_resource_name = local_assigns.fetch(:form_resource_name, resource.class.name.underscore)
+%>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+  <!-- Header Section -->
+  <%= render "shared/page_header",
+      title: title,
+      index_path: index_path,
+      show_path: show_path %>
+
+  <!-- Form Card -->
+  <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+    <%= render form_partial, form_resource_name.to_sym => resource %>
+  </div>
+</div>
+

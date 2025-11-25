@@ -2,6 +2,8 @@
   <%= render "books/table",
       title: nil,
       show_author: false,
+      from_page: "author_show",
+      return_to: author_path(@author),
       empty_message: "No books recorded for this author." %>
 <% end %>
 
