@@ -30,9 +30,12 @@
     <% end %>
     <%
       # For new loans, only show available books
-      # For editing, include the current book even if it's on loan
+      # For editing or when book_id is preselected, include the current/preselected book even if it's on loan
       available_books = Book.where(status: :available)
       if loan.persisted? && loan.book.present?
+        available_books = Book.where(status: :available).or(Book.where(id: loan.book_id))
+      elsif loan.book_id.present? && !loan.persisted?
+        # Include preselected book even if it's on loan (e.g., from book show page)
         available_books = Book.where(status: :available).or(Book.where(id: loan.book_id))
       end
       book_options = available_books.map { |b| [b.title, b.id] }

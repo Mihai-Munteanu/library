@@ -31,40 +31,59 @@
         <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Name <span class="text-red-500">*</span>
         <% end %>
+        <% name_has_error = author.errors[:name].any? || (author.errors.any? && author.name.blank?) %>
         <%= form.text_field :name,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+            class: "w-full px-3 py-2 border #{name_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if author.errors[:name].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= author.errors[:name].first %></p>
+        <% end %>
       </div>
 
       <div>
         <%= form.label :birth_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Birth Date <span class="text-red-500">*</span>
         <% end %>
+        <% birth_date_has_error = author.errors[:birth_date].any? || (author.errors.any? && author.birth_date.blank?) %>
         <%= form.date_field :birth_date,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+            class: "w-full px-3 py-2 border #{birth_date_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if author.errors[:birth_date].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= author.errors[:birth_date].first %></p>
+        <% end %>
       </div>
 
       <div>
         <%= form.label :death_date, class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.date_field :death_date,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+            class: "w-full px-3 py-2 border #{author.errors[:death_date].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if author.errors[:death_date].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= author.errors[:death_date].first %></p>
+        <% end %>
       </div>
 
       <div>
         <%= form.label :nationality, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Nationality <span class="text-red-500">*</span>
         <% end %>
+        <% nationality_has_error = author.errors[:nationality].any? || (author.errors.any? && author.nationality.blank?) %>
         <%= form.text_field :nationality,
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+            class: "w-full px-3 py-2 border #{nationality_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+        <% if author.errors[:nationality].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= author.errors[:nationality].first %></p>
+        <% end %>
       </div>
 
       <div>
         <%= form.label :gender, class: "block text-sm font-medium text-gray-700 mb-2" do %>
           Gender <span class="text-red-500">*</span>
         <% end %>
+        <% gender_has_error = author.errors[:gender].any? || (author.errors.any? && author.gender.blank?) %>
         <%= form.select :gender,
             Author.genders.keys.map { |g| [g.humanize, g] },
             { prompt: "Select gender" },
-            { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" } %>
+            { class: "w-full px-3 py-2 border #{gender_has_error ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" } %>
+        <% if author.errors[:gender].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= author.errors[:gender].first %></p>
+        <% end %>
       </div>
 
       <div class="md:col-span-2">

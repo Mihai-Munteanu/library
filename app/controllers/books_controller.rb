@@ -14,6 +14,8 @@ class BooksController < ApplicationController
 
   def new
     @book = Book.new(pages: 0, copies_sold: 0, price: 0.00)
+    # Preselect author if author_id parameter is provided (e.g., from author show page)
+    @book.author_id = params[:author_id] if params[:author_id].present?
   end
 
   def edit

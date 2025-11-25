@@ -16,6 +16,8 @@ class LoansController < ApplicationController
     # Set default start date to today and due date to 14 days from today
     @loan.start_date = Date.today
     @loan.due_date = Date.today + 14.days
+    # Preselect book if book_id parameter is provided (e.g., from book show page)
+    @loan.book_id = params[:book_id] if params[:book_id].present?
   end
 
   # GET /loans/1/edit
