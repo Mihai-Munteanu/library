@@ -100,7 +100,7 @@ class BooksController < ApplicationController
       @current_index_url = books_path
     end
 
-    @books = Book.includes(:author).all
+    @books = Book.includes(:author, loans: :member).all
     @books = apply_filters(@books, [ :title, :isbn, :author_id ])
     @books = apply_sorting(@books, { created_at: :desc })
     @pagy, @books = pagy(:offset, @books, items: 10)

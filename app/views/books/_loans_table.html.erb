@@ -25,13 +25,13 @@
                 </div>
               </td>
               <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><%= loan.start_date || "N/A" %></div>
+                <div class="text-sm text-gray-900"><%= format_date(loan.start_date) %></div>
               </td>
               <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><%= loan.due_date || "N/A" %></div>
+                <div class="text-sm text-gray-900"><%= format_date(loan.due_date) %></div>
               </td>
               <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><%= loan.return_date || "N/A" %></div>
+                <div class="text-sm text-gray-900"><%= format_date(loan.return_date) %></div>
               </td>
               <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-gray-900"><%= loan.status || "N/A" %></div>

@@ -115,4 +115,66 @@ module ApplicationHelper
       loans_path
     end
   end
+
+  # Format date for display
+  # Formats dates consistently across the application
+  def format_date(date)
+    return "N/A" if date.blank?
+
+    if date.is_a?(Date)
+      date.strftime("%b %d, %Y")
+    elsif date.is_a?(Time) || date.is_a?(DateTime)
+      # Check if time component is meaningful (not midnight)
+      if date.hour == 0 && date.min == 0 && date.sec == 0
+        date.strftime("%b %d, %Y")
+      else
+        date.strftime("%b %d, %Y %I:%M %p")
+      end
+    else
+      date.to_s
+    end
+  end
+
+  # Format time for display
+  # Formats time values (Time objects) consistently
+  def format_time(time)
+    return "N/A" if time.blank?
+
+    if time.is_a?(Time) || time.is_a?(DateTime)
+      time.strftime("%I:%M %p")
+    else
+      time.to_s
+    end
+  end
+
+  # Format metadata hash for display
+  # Converts JSON hash to a readable format
+  def format_metadata(metadata)
+    return "N/A" if metadata.blank?
+
+    # Handle both Hash (from JSON column) and JSON string
+    metadata_hash = if metadata.is_a?(String)
+      begin
+        JSON.parse(metadata)
+      rescue JSON::ParserError
+        {}
+      end
+    elsif metadata.is_a?(Hash) || metadata.is_a?(ActiveSupport::HashWithIndifferentAccess)
+      metadata.to_h
+    else
+      {}
+    end
+
+    return "N/A" if metadata_hash.empty?
+
+    # Format as key-value pairs in a definition list
+    content_tag(:dl, class: "space-y-2") do
+      safe_join(metadata_hash.map do |key, value|
+        content_tag(:div, class: "flex flex-wrap gap-2") do
+          content_tag(:dt, "#{key.to_s.humanize}:", class: "font-semibold text-gray-700") +
+          content_tag(:dd, value.to_s, class: "text-gray-900")
+        end
+      end)
+    end
+  end
 end

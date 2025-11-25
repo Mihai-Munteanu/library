@@ -52,6 +52,30 @@
         <dd class="text-base sm:text-lg text-gray-900"><%= @book.pages || "N/A" %></dd>
       </div>
 
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Status</dt>
+        <dd class="text-base sm:text-lg">
+          <% if @book.on_loan? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+              On Loan
+            </span>
+          <% else %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              Available
+            </span>
+          <% end %>
+        </dd>
+      </div>
+
+      <% if @book.on_loan? && @book.current_borrower %>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Borrowed By</dt>
+          <dd class="text-base sm:text-lg text-gray-900">
+            <%= link_to @book.current_borrower.name, member_path(@book.current_borrower), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+          </dd>
+        </div>
+      <% end %>
+
       <div class="sm:col-span-2 lg:col-span-3">
         <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Description</dt>
         <dd class="text-base text-gray-900 leading-relaxed">

@@ -1,9 +1,9 @@
 <%= form_with(model: loan, class: "contents") do |form| %>
   <% if loan.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3 mb-4">
       <h2><%= pluralize(loan.errors.count, "error") %> prohibited this loan from being saved:</h2>
 
-      <ul class="list-disc ml-6">
+      <ul class="list-disc ml-6 mt-2">
         <% loan.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,50 +11,124 @@
     </div>
   <% end %>
 
-<div class="my-5">
-    <%= form.label :member %>
-    <%= form.select :member_id, Member.all.map { |m| [m.name, m.id] }, { prompt: "Select member" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:member_id].none?, "border-red-400 focus:outline-red-600": loan.errors[:member_id].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :book %>
-    <%= form.select :book_id, Book.all.map { |b| [b.title, b.id] }, { prompt: "Select book" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:book_id].none?, "border-red-400 focus:outline-red-600": loan.errors[:book_id].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :start_date %>
-    <%= form.datetime_field :start_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:start_date].none?, "border-red-400 focus:outline-red-600": loan.errors[:start_date].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :due_date %>
-    <%= form.datetime_field :due_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:due_date].none?, "border-red-400 focus:outline-red-600": loan.errors[:due_date].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :return_date %>
-    <%= form.datetime_field :return_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:return_date].none?, "border-red-400 focus:outline-red-600": loan.errors[:return_date].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.select :status, Loan.statuses.keys, { prompt: "Select status" }, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:status].none?, "border-red-400 focus:outline-red-600": loan.errors[:status].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :notes %>
-    <%= form.text_area :notes, rows: 5, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:notes].none?, "border-red-400 focus:outline-red-600": loan.errors[:notes].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :metadata %>
-    <%= form.text_area :metadata, rows: 5, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:metadata].none?, "border-red-400 focus:outline-red-600": loan.errors[:metadata].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :paused_start_time %>
-    <%= form.time_field :paused_start_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:paused_start_time].none?, "border-red-400 focus:outline-red-600": loan.errors[:paused_start_time].any?}] %>
-  </div>
-  <div class="my-5">
-    <%= form.label :paused_end_time %>
-    <%= form.time_field :paused_end_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": loan.errors[:paused_end_time].none?, "border-red-400 focus:outline-red-600": loan.errors[:paused_end_time].any?}] %>
+  <div class="mb-4">
+    <%= form.label :member_id, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+      Member <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.select :member_id,
+        Member.all.map { |m| [m.name, m.id] },
+        { prompt: "Select a member" },
+        class: "w-full px-3 py-2 border #{loan.errors[:member_id].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+    <% if loan.errors[:member_id].any? %>
+      <p class="mt-1 text-sm text-red-600"><%= loan.errors[:member_id].first %></p>
+    <% end %>
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  <div class="mb-4">
+    <%= form.label :book_id, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+      Book <span class="text-red-500">*</span>
+    <% end %>
+    <%
+      # For new loans, only show available books
+      # For editing, include the current book even if it's on loan
+      available_books = Book.where(status: :available)
+      if loan.persisted? && loan.book.present?
+        available_books = Book.where(status: :available).or(Book.where(id: loan.book_id))
+      end
+      book_options = available_books.map { |b| [b.title, b.id] }
+    %>
+    <%= form.select :book_id,
+        book_options,
+        { prompt: "Select an available book" },
+        class: "w-full px-3 py-2 border #{loan.errors[:book_id].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+    <% if loan.errors[:book_id].any? %>
+      <p class="mt-1 text-sm text-red-600"><%= loan.errors[:book_id].first %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :start_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+      Start Date <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.date_field :start_date,
+        id: "loan_start_date",
+        class: "w-full px-3 py-2 border #{loan.errors[:start_date].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+    <% if loan.errors[:start_date].any? %>
+      <p class="mt-1 text-sm text-red-600"><%= loan.errors[:start_date].first %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :due_date, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+      Due Date <span class="text-red-500">*</span>
+    <% end %>
+    <%= form.date_field :due_date,
+        id: "loan_due_date",
+        class: "w-full px-3 py-2 border #{loan.errors[:due_date].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+    <% if loan.errors[:due_date].any? %>
+      <p class="mt-1 text-sm text-red-600"><%= loan.errors[:due_date].first %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :notes, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+      Notes
+    <% end %>
+    <%= form.text_area :notes,
+        rows: 4,
+        class: "w-full px-3 py-2 border #{loan.errors[:notes].any? ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors",
+        placeholder: "Optional notes about this loan..." %>
+    <% if loan.errors[:notes].any? %>
+      <p class="mt-1 text-sm text-red-600"><%= loan.errors[:notes].first %></p>
+    <% end %>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const startDateField = document.getElementById('loan_start_date');
+      const dueDateField = document.getElementById('loan_due_date');
+
+      if (startDateField && dueDateField) {
+        startDateField.addEventListener('change', function() {
+          if (this.value) {
+            const startDate = new Date(this.value);
+            const dueDate = new Date(startDate);
+            dueDate.setDate(dueDate.getDate() + 14);
+
+            // Format date as YYYY-MM-DD for the date input
+            const year = dueDate.getFullYear();
+            const month = String(dueDate.getMonth() + 1).padStart(2, '0');
+            const day = String(dueDate.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+
+            // Only update if due date is empty or was previously auto-set
+            if (!dueDateField.value || dueDateField.value === dueDateField.dataset.autoSet) {
+              dueDateField.value = formattedDate;
+              dueDateField.dataset.autoSet = formattedDate;
+            }
+          }
+        });
+
+        // Set initial auto-set flag if due date matches start date + 14 days
+        if (startDateField.value && dueDateField.value) {
+          const startDate = new Date(startDateField.value);
+          const expectedDueDate = new Date(startDate);
+          expectedDueDate.setDate(expectedDueDate.getDate() + 14);
+
+          const year = expectedDueDate.getFullYear();
+          const month = String(expectedDueDate.getMonth() + 1).padStart(2, '0');
+          const day = String(expectedDueDate.getDate()).padStart(2, '0');
+          const expectedFormatted = `${year}-${month}-${day}`;
+
+          if (dueDateField.value === expectedFormatted) {
+            dueDateField.dataset.autoSet = expectedFormatted;
+          }
+        }
+      }
+    });
+  </script>
+
+  <div class="mt-6">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer transition-colors shadow-md hover:shadow-lg" %>
   </div>
 <% end %>

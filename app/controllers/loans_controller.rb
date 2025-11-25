@@ -13,6 +13,9 @@ class LoansController < ApplicationController
   # GET /loans/new
   def new
     @loan = Loan.new
+    # Set default start date to today and due date to 14 days from today
+    @loan.start_date = Date.today
+    @loan.due_date = Date.today + 14.days
   end
 
   # GET /loans/1/edit
@@ -26,6 +29,8 @@ class LoansController < ApplicationController
   # POST /loans or /loans.json
   def create
     @loan = Loan.new(loan_params)
+    # Set default status to borrowed when creating a new loan
+    @loan.status ||= :borrowed
 
     respond_to do |format|
       if @loan.save
@@ -113,7 +118,7 @@ class LoansController < ApplicationController
     end
 
     @loans = Loan.includes(:member, :book).all
-    @loans = apply_filters(@loans, [:member_id, :book_id, :status])
+    @loans = apply_filters(@loans, [ :member_id, :book_id, :status ])
     @loans = apply_sorting(@loans, { created_at: :desc })
     @pagy, @loans = pagy(:offset, @loans, items: 10)
   end
@@ -130,12 +135,7 @@ class LoansController < ApplicationController
         :book_id,
         :start_date,
         :due_date,
-        :return_date,
-        :status,
-        :notes,
-        :metadata,
-        :paused_start_time,
-        :paused_end_time
+        :notes
       ])
     end
 end

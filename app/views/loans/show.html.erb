@@ -9,14 +9,14 @@
       label: "Book",
       value: link_to(@loan.book.title, book_path(@loan.book), class: "text-blue-600 hover:text-blue-800 hover:underline")
     },
-    { label: "Start Date", value: @loan.start_date || "N/A" },
-    { label: "Due Date", value: @loan.due_date || "N/A" },
-    { label: "Return Date", value: @loan.return_date || "N/A" },
+    { label: "Start Date", value: format_date(@loan.start_date) },
+    { label: "Due Date", value: format_date(@loan.due_date) },
+    { label: "Return Date", value: format_date(@loan.return_date) },
     { label: "Status", value: @loan.status || "N/A" },
     { label: "Notes", value: @loan.notes || "N/A", col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900 leading-relaxed" },
-    { label: "Metadata", value: @loan.metadata || "N/A", col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900" },
-    { label: "Paused Start Time", value: @loan.paused_start_time || "N/A" },
-    { label: "Paused End Time", value: @loan.paused_end_time || "N/A" }
+    { label: "Metadata", value: format_metadata(@loan.metadata), col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900" },
+    { label: "Paused Start Time", value: format_time(@loan.paused_start_time) },
+    { label: "Paused End Time", value: format_time(@loan.paused_end_time) }
   ]
 %>
 <%= render "shared/show_page",

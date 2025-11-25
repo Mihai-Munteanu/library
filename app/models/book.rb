@@ -2,6 +2,14 @@ class Book < ApplicationRecord
   belongs_to :author
   has_many :loans, dependent: :destroy
 
+  # Explicitly declare the attribute type for the enum
+  attribute :status, :integer, default: 0
+
+  enum :status, {
+    available: 0,
+    on_loan: 1
+  }
+
   validates :title, presence: true
   validates :title, length: { minimum: 3 }, allow_blank: true
   validates :isbn, presence: true
@@ -14,4 +22,23 @@ class Book < ApplicationRecord
   validates :price, presence: true
   validates :price, numericality: { greater_than: 0 }, allow_blank: true
   validates :pages, numericality: { greater_or_equal_to: 0 }
+
+  # Get the current active loan (if any)
+  def current_loan
+    loans.where(status: :borrowed).order(created_at: :desc).first
+  end
+
+  # Get the member who currently has the book (if on loan)
+  def current_borrower
+    current_loan&.member
+  end
+
+  # Update status based on current loans
+  def update_status_from_loans
+    if loans.where(status: :borrowed).exists?
+      update_column(:status, :on_loan) unless status == "on_loan"
+    else
+      update_column(:status, :available) unless status == "available"
+    end
+  end
 end

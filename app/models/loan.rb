@@ -8,8 +8,12 @@ class Loan < ApplicationRecord
   belongs_to :member
   belongs_to :book
 
+  # Callbacks to update book status when loan changes
+  after_save :update_book_status
+  after_destroy :update_book_status
+
   validates :start_date, presence: true
-  validates :start_date, comparison: { greater_than: Date.new(1900, 1, 1), less_than: Date.today }, allow_blank: true
+  validates :start_date, comparison: { greater_than_or_equal_to: Date.today }, allow_blank: true
   validates :due_date, presence: true
   validates :due_date, comparison: { greater_than: :start_date }, allow_blank: true
   validates :return_date, comparison: { greater_than: :start_date }, allow_blank: true
@@ -18,4 +22,10 @@ class Loan < ApplicationRecord
 
   validates :paused_start_time, comparison: { less_than_or_equal_to: :paused_end_time }, allow_blank: true
   validates :paused_end_time, comparison: { greater_than_or_equal_to: :paused_start_time }, allow_blank: true
+
+  private
+
+  def update_book_status
+    book.update_status_from_loans
+  end
 end
