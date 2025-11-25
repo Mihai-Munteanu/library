@@ -20,9 +20,6 @@ class Loan < ApplicationRecord
   validates :notes, length: { maximum: 1000 }, allow_blank: true
   validates :metadata, length: { maximum: 1000 }, allow_blank: true
 
-  validates :paused_start_time, comparison: { less_than_or_equal_to: :paused_end_time }, allow_blank: true
-  validates :paused_end_time, comparison: { greater_than_or_equal_to: :paused_start_time }, allow_blank: true
-
   private
 
   def update_book_status

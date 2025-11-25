@@ -27,18 +27,7 @@ module Seeds
         end
         status = Loan.statuses.keys.sample
         notes = Faker::Lorem.paragraph(sentence_count: 2..5)
-        metadata = {
-          renewal_count: rand(0..3)
-        }
-
-        # Generate time values (only time portion)
-        paused_start_time = nil
-        paused_end_time = nil
-        if rand < 0.3  # 30% chance of having paused times
-          start_hour = rand(8..16)
-          paused_start_time = Time.parse("#{start_hour}:00:00")
-          paused_end_time = Time.parse("#{[ start_hour + rand(1..4), 23 ].min}:00:00")
-        end
+        metadata = {}
 
         # Build loan attributes hash
         loan_attributes = {
@@ -51,12 +40,6 @@ module Seeds
           notes: notes,
           metadata: metadata
         }
-
-        # Only add paused times if they exist
-        if paused_start_time && paused_end_time
-          loan_attributes[:paused_start_time] = paused_start_time
-          loan_attributes[:paused_end_time] = paused_end_time
-        end
 
         # Create loan with all attributes
         Loan.create!(loan_attributes)

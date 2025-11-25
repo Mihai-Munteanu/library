@@ -130,12 +130,20 @@ class LoansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def loan_params
-      params.expect(loan: [
+      loan_params = params.expect(loan: [
         :member_id,
         :book_id,
         :start_date,
         :due_date,
-        :notes
+        :notes,
+        { metadata: {} }
       ])
+
+      # Clean up metadata hash - remove empty values
+      if loan_params[:metadata].present?
+        loan_params[:metadata] = loan_params[:metadata].compact_blank
+      end
+
+      loan_params
     end
 end

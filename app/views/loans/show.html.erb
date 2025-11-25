@@ -12,12 +12,32 @@
     { label: "Start Date", value: format_date(@loan.start_date) },
     { label: "Due Date", value: format_date(@loan.due_date) },
     { label: "Return Date", value: format_date(@loan.return_date) },
-    { label: "Status", value: @loan.status || "N/A" },
-    { label: "Notes", value: @loan.notes || "N/A", col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900 leading-relaxed" },
-    { label: "Metadata", value: format_metadata(@loan.metadata), col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900" },
-    { label: "Paused Start Time", value: format_time(@loan.paused_start_time) },
-    { label: "Paused End Time", value: format_time(@loan.paused_end_time) }
+    { label: "Status", value: @loan.status&.humanize || "N/A" },
+    { label: "Notes", value: @loan.notes.present? ? simple_format(@loan.notes) : content_tag(:span, "No notes available.", class: "text-gray-400 italic"), col_span: "sm:col-span-2 lg:col-span-3", value_class: "text-base text-gray-900 leading-relaxed" }
   ]
+
+  # Prepare metadata fields if present
+  metadata = @loan.metadata || {}
+  metadata_fields = []
+  if metadata.values.any?(&:present?)
+    metadata_fields << { label: "Late Fee", value: "$#{sprintf("%.2f", metadata["late_fee"].to_f)}" } if metadata["late_fee"].present?
+    metadata_fields << { label: "Contact Preference", value: metadata["contact_preference"]&.humanize } if metadata["contact_preference"].present?
+    metadata_fields << { label: "Special Conditions", value: simple_format(metadata["special_conditions"]), col_span: "sm:col-span-2", value_class: "text-base text-gray-900 leading-relaxed" } if metadata["special_conditions"].present?
+  end
+
+  # Prepare details sections
+  details_sections = [
+    {
+      title: "Basic Information",
+      fields: basic_fields
+    }
+  ]
+
+  details_sections << {
+    title: "Additional Information",
+    fields: metadata_fields,
+    grid_cols: "grid-cols-1 sm:grid-cols-2"
+  } if metadata_fields.any?
 %>
 <%= render "shared/show_page",
     resource: @loan,
@@ -25,9 +45,4 @@
     index_path: loans_path,
     edit_path: edit_loan_path(@loan),
     delete_confirmation_path: delete_confirmation_loan_path(@loan, from_page: "show"),
-    details_sections: [
-      {
-        title: "Basic Information",
-        fields: basic_fields
-      }
-    ] %>
+    details_sections: details_sections %>

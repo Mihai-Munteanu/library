@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_25_184159) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_25_200726) do
   create_table "authors", force: :cascade do |t|
     t.text "biography"
     t.date "birth_date"
@@ -51,8 +51,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_25_184159) do
     t.integer "member_id"
     t.json "metadata", default: {}
     t.text "notes"
-    t.time "paused_end_time", default: "2000-01-01 00:13:00"
-    t.time "paused_start_time", default: "2000-01-01 00:12:00"
     t.datetime "return_date"
     t.datetime "start_date"
     t.integer "status", default: 0

@@ -10,9 +10,6 @@ class CreateLoans < ActiveRecord::Migration[8.1]
       t.integer :status, default: 0
       t.text :notes
       t.json :metadata, default: {}
-      t.time :paused_start_time, default: "00:12:00"
-      t.time :paused_end_time, default: "00:13:00"
-
 
       t.index :start_date
       t.index :due_date
