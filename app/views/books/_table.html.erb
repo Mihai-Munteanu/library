@@ -19,6 +19,9 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                Cover
+              </th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                 <%= sortable_column(:title, "Title") %>
               </th>
               <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
@@ -46,6 +49,15 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <% books.each do |book| %>
               <tr id="book_<%= book.id %>" class="hover:bg-gray-50">
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
+                  <% if book.cover.attached? %>
+                    <%= image_tag book.cover, class: "h-12 w-auto object-contain rounded shadow-sm border border-gray-200" %>
+                  <% else %>
+                    <div class="h-12 w-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs px-1">
+                      No Cover
+                    </div>
+                  <% end %>
+                </td>
                 <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900"><%= book.title %></div>
                   <div class="text-xs text-gray-500 md:hidden">ISBN: <%= book.isbn %></div>

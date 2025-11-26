@@ -1,4 +1,4 @@
-<%= form_with(model: book, local: true) do |form| %>
+<%= form_with(model: book, local: true, multipart: true) do |form| %>
   <% if book.errors.any? %>
     <div class="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded mb-6">
       <div class="flex">
@@ -118,6 +118,35 @@
           <p class="mt-1 text-sm text-red-600"><%= book.errors[:description].first %></p>
         <% else %>
           <p class="mt-1 text-sm text-gray-500">Maximum 1000 characters</p>
+        <% end %>
+      </div>
+
+      <div class="md:col-span-2">
+        <%= form.label :cover, class: "block text-sm font-medium text-gray-700 mb-2" do %>
+          Cover Image
+        <% end %>
+        <% if book.cover.attached? %>
+          <div class="mb-4">
+            <%= image_tag book.cover, class: "max-w-xs h-auto rounded-lg shadow-md border border-gray-300" %>
+            <p class="mt-2 text-sm text-gray-600">Current cover image</p>
+            <div class="mt-2">
+              <%= form.check_box :remove_cover, { class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" }, "1", "0" %>
+              <%= form.label :remove_cover, "Remove current cover image", class: "ml-2 text-sm text-gray-700" %>
+            </div>
+          </div>
+        <% end %>
+        <%= form.file_field :cover, accept: "image/*",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors #{'border-red-500' if book.errors[:cover].any?}" %>
+        <% if book.errors[:cover].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= book.errors[:cover].first %></p>
+        <% else %>
+          <p class="mt-1 text-sm text-gray-500">
+            <% if book.persisted? %>
+              Upload a new cover image to replace the current one (JPG, PNG, GIF)
+            <% else %>
+              Upload a cover image (JPG, PNG, GIF)
+            <% end %>
+          </p>
         <% end %>
       </div>
     </div>

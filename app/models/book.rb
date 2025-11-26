@@ -1,6 +1,7 @@
 class Book < ApplicationRecord
   belongs_to :author
   has_many :loans, dependent: :destroy
+  has_one_attached :cover
 
   # Explicitly declare the attribute type for the enum
   attribute :status, :integer, default: 0

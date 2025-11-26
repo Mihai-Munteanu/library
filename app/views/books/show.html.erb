@@ -13,6 +13,11 @@
 
   <!-- Book Details Card - Responsive Grid -->
   <div class="bg-white shadow-md rounded-lg px-4 sm:px-6 lg:px-8 pt-6 pb-8 mb-6">
+    <% if @book.cover.attached? %>
+      <div class="mb-6 flex justify-center">
+        <%= image_tag @book.cover, class: "max-w-xs sm:max-w-sm md:max-w-md h-auto rounded-lg shadow-lg border border-gray-300" %>
+      </div>
+    <% end %>
     <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Basic Information</h2>
     <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       <div class="sm:col-span-1">

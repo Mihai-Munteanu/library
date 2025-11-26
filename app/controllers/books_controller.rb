@@ -35,7 +35,15 @@ class BooksController < ApplicationController
   end
 
   def update
-    if @book.update(book_params)
+    # Handle cover removal if checkbox is checked
+    if params[:book] && params[:book][:remove_cover] == "1"
+      @book.cover.purge if @book.cover.attached?
+    end
+
+    update_params = book_params
+    update_params.delete(:remove_cover) if update_params.key?(:remove_cover)
+
+    if @book.update(update_params)
       redirect_to @book
     else
       render :edit, status: :unprocessable_entity
@@ -121,7 +129,9 @@ class BooksController < ApplicationController
       :publication_date,
       :copies_sold,
       :price,
-      :pages
+      :pages,
+      :cover,
+      :remove_cover
     )
   end
 end
