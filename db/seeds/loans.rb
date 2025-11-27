@@ -10,22 +10,27 @@ module Seeds
 
       count.times do |i|
         member = Member.all.sample
-        book = Book.all.sample
+        book = Book.includes(:loans).all.sample
 
         # Skip if no members or books exist
         next unless member && book
 
-        # start_date must be less than Date.today (not equal), so use Date.yesterday as max
-        start_date = Faker::Date.between(from: 1.year.ago, to: Date.yesterday)
-        # due_date must be greater than start_date (not equal), so start from start_date + 1 day
-        due_date = Faker::Date.between(from: start_date + 1.day, to: 1.year.from_now)
-        return_date = if rand < 0.7  # 70% chance of being returned
-          # return_date must be greater than start_date, so ensure it's at least due_date
-          Faker::Date.between(from: due_date, to: 1.year.from_now)
+        # Start date should be no more than 1 week old
+        start_date_earliest = Date.today - 1.week
+        start_date = Faker::Date.between(from: start_date_earliest, to: Date.today)
+
+        # Due date must be on or after start date
+        due_date = Faker::Date.between(from: start_date, to: start_date + 1.year)
+
+        book_has_active_loan = book.loans.where.not(status: Loan.statuses[:returned]).exists?
+        possible_statuses = book_has_active_loan ? %w[returned] : Loan.statuses.keys
+        status = possible_statuses.sample
+
+        return_date = if status == "returned"
+          Faker::Date.between(from: due_date, to: due_date + 6.months)
         else
           nil
         end
-        status = Loan.statuses.keys.sample
         notes = Faker::Lorem.paragraph(sentence_count: 2..5)
         metadata = {}
 

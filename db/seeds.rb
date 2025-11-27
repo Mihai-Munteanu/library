@@ -7,13 +7,13 @@ Dir[Rails.root.join("db/seeds/*.rb")].sort.each { |file| require file }
 
 # Seed authors
 # Set clear_existing: true if you want to delete all existing authors first
-Seeds::Authors.seed(count: 30, clear_existing: false)
+Seeds::Authors.seed(count: 10, clear_existing: false)
 
 # Seed books
-Seeds::Books.seed(count: 500, clear_existing: false)
+Seeds::Books.seed(count: 50, clear_existing: false)
 
 # Seed members
-Seeds::Members.seed(count: 30, clear_existing: false)
+Seeds::Members.seed(count: 20, clear_existing: false)
 
 # Seed loans
-Seeds::Loans.seed(count: 5000, clear_existing: false)
+Seeds::Loans.seed(count: 15, clear_existing: false)
