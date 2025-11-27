@@ -8,8 +8,11 @@ class Author < ApplicationRecord
 
   after_initialize :initialize_metadata
 
+  before_validation :normalize_name
+
   validates :name, presence: true
   validates :name, length: { minimum: 3, maximum: 255 }, allow_blank: true
+  validates :name, uniqueness: { case_sensitive: false }, allow_blank: true
   validates :biography, length: { maximum: 1000 }, allow_blank: true
   validates :birth_date, presence: true
   validates :birth_date,
@@ -30,6 +33,10 @@ class Author < ApplicationRecord
   validate :validate_metadata_notes, if: -> { metadata.present? && metadata["notes"].present? }
 
   private
+
+  def normalize_name
+    self.name = name&.strip
+  end
 
   def initialize_metadata
     self.metadata ||= {}
