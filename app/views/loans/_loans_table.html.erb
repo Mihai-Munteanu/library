@@ -12,16 +12,16 @@
               Book
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:start_date, "Start Date") %>
+              <%= sortable_column(:start_date, "Start Date", loans_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:due_date, "Due Date") %>
+              <%= sortable_column(:due_date, "Due Date", loans_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:return_date, "Return Date") %>
+              <%= sortable_column(:return_date, "Return Date", loans_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:status, "Status") %>
+              <%= sortable_column(:status, "Status", loans_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions

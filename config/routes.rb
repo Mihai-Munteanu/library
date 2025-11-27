@@ -25,5 +25,5 @@ Rails.application.routes.draw do
   root "dashboard#index"
 
   # Catch all unmatched routes and return 404
-  match "*path", to: "application#routing_error", via: :all, constraints: ->(req) { !req.path.start_with?("/rails") }
+  # match "*path", to: "application#routing_error", via: :all, constraints: ->(req) { !req.path.start_with?("/rails") }
 end

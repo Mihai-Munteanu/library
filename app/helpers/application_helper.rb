@@ -9,7 +9,10 @@ module ApplicationHelper
   end
 
   # Generate sortable column header link
-  def sortable_column(column, label, path = request.path)
+  # @param column [Symbol] The column name to sort by
+  # @param label [String] The display label for the column
+  # @param path [String] The base path to use for sorting (e.g., authors_path, books_path)
+  def sortable_column(column, label, path)
     direction = if params[:sort] == column.to_s && params[:direction] == "asc"
       "desc"
     else
@@ -19,7 +22,31 @@ module ApplicationHelper
     current_direction = params[:sort] == column.to_s ? params[:direction] : nil
     is_active = params[:sort] == column.to_s
 
-    link_to url_for(params.permit!.merge(sort: column, direction: direction)),
+    # Build the URL with sort parameters
+    # Preserve existing query parameters and add/update sort parameters
+    base_path = path.to_s
+    path_without_query = base_path.split("?").first
+
+    # Exclude internal Rails parameters and pagination
+    excluded_params = [ :sort, :direction, :page, :redirect_to, :from_page, :controller, :action, :id, :authenticity_token, :_method ]
+    query_params = {}
+
+    # Get existing query params from request if we're on the same path
+    if request.path == path_without_query && request.query_parameters.any?
+      query_params = request.query_parameters.except(*excluded_params).to_h
+    end
+
+    # Also parse any query params that might be in the path parameter itself
+    if base_path.include?("?")
+      path_query = base_path.split("?", 2).last
+      parsed_path_params = CGI.parse(path_query).transform_values(&:first).symbolize_keys
+      query_params.merge!(parsed_path_params.except(*excluded_params))
+    end
+
+    query_params.merge!(sort: column, direction: direction)
+    sort_url = "#{path_without_query}?#{query_params.to_query}"
+
+    link_to sort_url,
             class: "flex items-center space-x-1 hover:text-blue-600 #{'text-blue-600' if is_active}" do
       content_tag(:span, label) +
       (is_active ? content_tag(:span, current_direction == "asc" ? "\u2191" : "\u2193", class: "text-blue-600 ml-1") : "")

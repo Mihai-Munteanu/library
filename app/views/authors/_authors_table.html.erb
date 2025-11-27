@@ -6,16 +6,16 @@
         <thead class="bg-gray-50">
           <tr>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:name, "Name") %>
+              <%= sortable_column(:name, "Name", authors_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:nationality, "Nationality") %>
+              <%= sortable_column(:nationality, "Nationality", authors_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:birth_date, "Birth Date") %>
+              <%= sortable_column(:birth_date, "Birth Date", authors_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= sortable_column(:death_date, "Death Date") %>
+              <%= sortable_column(:death_date, "Death Date", authors_path) %>
             </th>
             <th class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions

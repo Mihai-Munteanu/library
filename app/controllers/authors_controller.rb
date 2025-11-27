@@ -9,7 +9,7 @@ class AuthorsController < ApplicationController
     @author = Author.includes(:books).find(params[:id])
     @books = @author.books
     @books = apply_sorting(@books, { created_at: :desc })
-    @pagy, @books = pagy(:offset, @books, items: 5)
+    @pagy, @books = pagy(:offset, @books, limit: 5)
 
     # If this is a Turbo Frame request (pagination), render only the frame partial
     if request.headers["Turbo-Frame"] == "books_table"
@@ -108,7 +108,7 @@ class AuthorsController < ApplicationController
     @authors = Author.all
     @authors = apply_filters(@authors, [ :name, :nationality, :gender ])
     @authors = apply_sorting(@authors, { created_at: :desc })
-    @pagy, @authors = pagy(:offset, @authors, items: 10)
+    @pagy, @authors = pagy(:offset, @authors, limit: 10)
   end
 
   def set_author
