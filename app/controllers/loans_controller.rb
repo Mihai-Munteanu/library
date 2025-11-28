@@ -78,14 +78,14 @@ class LoansController < ApplicationController
             # From book show page: reload the book's loans
             @loans = @book.loans
             @loans = apply_sorting(@loans, { created_at: :desc })
-            @pagy, @loans = pagy(:offset, @loans, limit: 10)
+            @pagy, @loans = pagy(@loans, limit: 10)
 
             render :return_loan
           elsif from_page == "member_show" && @member.present?
             # From member show page: reload the member's loans
             @loans = @member.loans
             @loans = apply_sorting(@loans, { created_at: :desc })
-            @pagy, @loans = pagy(:offset, @loans, limit: 10)
+            @pagy, @loans = pagy(@loans, limit: 10)
 
             render :return_loan
           elsif from_page == "index"
@@ -121,14 +121,14 @@ class LoansController < ApplicationController
           # From book show page: reload the book's loans
           @loans = @book.loans
           @loans = apply_sorting(@loans, { created_at: :desc })
-          @pagy, @loans = pagy(:offset, @loans, limit: 10)
+          @pagy, @loans = pagy(@loans, limit: 10)
 
           render :destroy
         elsif from_page == "member_show" && @member.present?
           # From member show page: reload the member's loans
           @loans = @member.loans
           @loans = apply_sorting(@loans, { created_at: :desc })
-          @pagy, @loans = pagy(:offset, @loans, limit: 10)
+          @pagy, @loans = pagy(@loans, limit: 10)
 
           render :destroy
         elsif from_page == "index"
@@ -169,7 +169,7 @@ class LoansController < ApplicationController
     @loans = Loan.includes(:member, :book).all.order(created_at: :desc)
     @loans = apply_filters(@loans, [ :member_id, :book_id, :status ])
     @loans = apply_sorting(@loans, { created_at: :desc })
-    @pagy, @loans = pagy(:offset, @loans, limit: 10)
+    @pagy, @loans = pagy(@loans, limit: 10)
   end
 
     # Use callbacks to share common setup or constraints between actions.

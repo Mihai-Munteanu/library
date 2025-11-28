@@ -9,7 +9,7 @@ class BooksController < ApplicationController
     @book = Book.includes(:author, :loans).find(params[:id])
     @loans = @book.loans
     @loans = apply_sorting(@loans, { created_at: :desc })
-    @pagy, @loans = pagy(:offset, @loans, limit: 10)
+    @pagy, @loans = pagy(@loans, limit: 10)
   end
 
   def new
@@ -63,7 +63,7 @@ class BooksController < ApplicationController
           @author = @book.author
           @books = @author.books
           @books = apply_sorting(@books, { created_at: :desc })
-          @pagy, @books = pagy(:offset, @books, limit: 5)
+          @pagy, @books = pagy(@books, limit: 5)
 
           render :destroy
         elsif from_page == "show" && redirect_to.present?
@@ -113,7 +113,7 @@ class BooksController < ApplicationController
     @books = Book.includes(:author, loans: :member).all
     @books = apply_filters(@books, [ :title, :isbn, :author_id ])
     @books = apply_sorting(@books, { created_at: :desc })
-    @pagy, @books = pagy(:offset, @books, limit: 10)
+    @pagy, @books = pagy(@books, limit: 10)
   end
 
   def set_book

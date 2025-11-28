@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Avo::Engine, at: "/avo"
+
   get "dashboard/index"
   resources :loans do
     member do

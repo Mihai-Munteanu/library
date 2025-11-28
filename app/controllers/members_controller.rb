@@ -11,7 +11,7 @@ class MembersController < ApplicationController
     @member = Member.includes(:loans).find(params[:id])
     @loans = @member.loans
     @loans = apply_sorting(@loans, { created_at: :desc })
-    @pagy, @loans = pagy(:offset, @loans, limit: 10)
+    @pagy, @loans = pagy(@loans, limit: 10)
   end
 
   # GET /members/new
@@ -103,9 +103,9 @@ class MembersController < ApplicationController
     end
 
     @members = Member.all
-    @members = apply_filters(@members, [:name, :email, :gender, :is_active, :is_vip])
+    @members = apply_filters(@members, [ :name, :email, :gender, :is_active, :is_vip ])
     @members = apply_sorting(@members, { created_at: :desc })
-    @pagy, @members = pagy(:offset, @members, limit: 10)
+    @pagy, @members = pagy(@members, limit: 10)
   end
 
     # Use callbacks to share common setup or constraints between actions.

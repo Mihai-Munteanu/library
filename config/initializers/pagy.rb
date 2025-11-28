@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Pagy initializer file (43.1.2)
+# Pagy initializer file (9.x)
 # See https://ddnexus.github.io/pagy/resources/initializer/
 
 ############ Global Options ################################################################
@@ -8,10 +8,10 @@
 # Add your global options below. They will be applied globally.
 # For example:
 #
-Pagy.options[:limit] = 10               # Limit the items per page
-# Pagy.options[:client_max_limit] = 100   # The client can request a limit up to 100
-# Pagy.options[:max_pages] = 200          # Allow only 200 pages
-# Pagy.options[:jsonapi] = true           # Use JSON:API compliant URLs
+Pagy::DEFAULT[:limit] = 10               # Limit the items per page (renamed from :items in 9.x)
+# Pagy::DEFAULT[:limit_max] = 100        # The client can request a limit up to 100 (renamed from :max_limit in 9.x)
+# Pagy::DEFAULT[:max_pages] = 200        # Allow only 200 pages
+# Pagy::DEFAULT[:jsonapi] = true         # Use JSON:API compliant URLs
 
 
 ############ JavaScript ####################################################################

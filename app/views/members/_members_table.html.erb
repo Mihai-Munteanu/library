@@ -71,7 +71,7 @@
   <!-- Pagination -->
   <% if @pagy && @pagy.pages > 1 %>
     <div id="members-pagination" class="mt-6 flex justify-center">
-      <%== @pagy.series_nav %>
+      <%== pagy_nav(@pagy) %>
     </div>
   <% else %>
     <div id="members-pagination"></div>

@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Pagy::Frontend
+
   # Check if a navigation tab should be active
   # Handles exact matches and nested routes (e.g., /authors/1 matches /authors)
   def nav_tab_class(path)

@@ -70,4 +70,5 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem 'pagy'
+gem 'pagy', '~> 9.0'
+gem "avo", ">= 3.2"
